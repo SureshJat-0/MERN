@@ -5,6 +5,7 @@ import Login from "./Components/Login";
 import Profile from "./Components/Profile";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import Logout from "./Components/Logout";
 
 export default function Twitter() {
   let [user, setUser] = useState(null);
@@ -39,7 +40,7 @@ export default function Twitter() {
   return (
     <>
       <Routes>
-        <Route path="/" element={<HomeFeed />} />
+        <Route path="/" element={<HomeFeed user={user}/>} />
         <Route path="/signup" element={<SignUP />} />
         <Route
           path="/login"
@@ -47,6 +48,7 @@ export default function Twitter() {
             <Login checkAuth={checkAuth} handleSetUser={handleSetUser} />
           }
         />
+        <Route path="/logout" element={<Logout handleSetUser={handleSetUser}/>} />
         <Route path="/profile" element={<Profile user={user} />} />
       </Routes>
     </>

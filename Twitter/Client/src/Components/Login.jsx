@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import Navbar from "./Navbar";
+import { useNavigate } from "react-router-dom";
 
 export default function Login({ checkAuth, handleSetUser }) {
   let [input, setInput] = useState({
@@ -8,12 +9,14 @@ export default function Login({ checkAuth, handleSetUser }) {
     password: "",
   });
 
+  const navigate = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
     await axios
       .post("/api/auth/login", input, { withCredentials: true })
       .then((res) => {
         console.log("User Logged In");
+        navigate('/');
         handleSetUser(res.data.user);
         checkAuth();
       })

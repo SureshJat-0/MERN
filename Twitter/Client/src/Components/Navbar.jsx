@@ -39,6 +39,13 @@ export default function Navbar() {
           </span>
         </li>
         <li className="my-6">
+          <span className="my-1 py-3 px-6 cursor-pointer rounded-full hover:bg-zinc-600">
+            <Link to={"/logout"}>
+            <i className="fa-solid fa-right-from-bracket pe-4"></i> Logout
+            </Link>
+          </span>
+        </li>
+        <li className="my-6">
           <span className="my-1 py-3 px-6 ursor-pointer rounded-full hover:bg-zinc-600">
             <i className="fa-solid fa-ellipsis pe-4"></i> More
           </span>

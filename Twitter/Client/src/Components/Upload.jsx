@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 
-export default function Upload({ addArticle }) {
+export default function Upload({ addArticle, user }) {
   let initPostInfo = {
     userName: "",
     article: "",
@@ -21,10 +22,15 @@ export default function Upload({ addArticle }) {
   //   setFile(e.target.files[0]);
   // };
 
+  const navigate = useNavigate();
   // handle submit
   let handleSubmit = async (e) => {
     e.preventDefault();
     if (postInfo.article === "" || !postInfo.userName || !postInfo.imgUrl) return;
+    if (!user) {
+      navigate('/login');
+      return;
+    }
     let newArticle = {
       userName: postInfo.userName,
       article: postInfo.article,

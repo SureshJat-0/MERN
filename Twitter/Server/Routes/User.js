@@ -4,16 +4,18 @@ const UserRouter = express.Router();
 const passport = require("passport");
 
 const {
-  HandleSignupPost,
-  HandleLoginPost,
+  handleSignupPost,
+  handleLoginPost,
+  handleLogout,
 } = require("../Controller/UserHandler.js");
 const isLoggedIn = require("../Middlewares/auth.js");
 
-UserRouter.route("/signup").post(HandleSignupPost);
+UserRouter.route("/signup").post(handleSignupPost);
 UserRouter.route("/login").post(
   passport.authenticate("local"),
-  HandleLoginPost
+  handleLoginPost
 );
+UserRouter.route('/logout').get(handleLogout);
 
 // Check for auth
 UserRouter.route("/status").get(isLoggedIn);

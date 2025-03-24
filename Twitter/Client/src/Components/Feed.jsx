@@ -3,7 +3,7 @@ import AllPosts from "./AllPosts";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-export default function Middle() {
+export default function Feed({user}) {
   let [posts, setPosts] = useState([]);
 
   let addArticle = async (newArticle) => {
@@ -26,7 +26,7 @@ export default function Middle() {
 
   return (
     <div className="w-[45vw] border border-zinc-600 border-y-0">
-      <Upload addArticle={addArticle} />
+      <Upload addArticle={addArticle} user={user}/>
       <AllPosts allPosts={posts} />
     </div>
   );

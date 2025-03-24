@@ -1,21 +1,33 @@
-const User = require('../Models/user.js');
+const User = require("../Models/user.js");
 
-const HandleSignupPost = async (req, res) => {
-    const { username, password } = req.body;
-    if(!username || !password) {
-        return res.status(400).send({Status: 'Error', message: 'Fill all fields'});
+const handleSignupPost = async (req, res) => {
+  const { username, password } = req.body;
+  if (!username || !password) {
+    return res
+      .status(400)
+      .send({ Status: "Error", message: "Fill all fields" });
+  }
+  let newUser = new User({ username });
+  const registerdUser = await User.register(newUser, password);
+  console.log(registerdUser);
+  res.json({ status: "Success" });
+};
+
+const handleLoginPost = (req, res) => {
+  res.json({ status: "Success", user: req.user });
+};
+
+const handleLogout = (req, res) => {
+  req.logout((err) => {
+    if (err) {
+      console.log(err);
     }
-    let newUser = new User({username});
-    const registerdUser = await User.register(newUser, password);
-    console.log(registerdUser);
-    res.json({status: 'Success'});
-}
-
-const HandleLoginPost = (req, res) => {
-    res.json({status: 'Success', user: req.user});
-}
+    res.json({logout: 'Success'});
+  });
+};
 
 module.exports = {
-    HandleSignupPost,
-    HandleLoginPost,
-}
+  handleSignupPost,
+  handleLoginPost,
+  handleLogout,
+};
