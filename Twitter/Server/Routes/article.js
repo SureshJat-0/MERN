@@ -1,10 +1,10 @@
 const express = require("express");
 const articleRouter = express.Router();
 
-const { HandlePostArticle, HandleGetArticles, HandleGetOneArticle } = require("../Controller/HandleArticle.js");
+const { HandlePostArticle, HandleGetArticles, HandleGetProfileArticles } = require("../Controller/HandleArticle.js");
 
 articleRouter.route("/").post(HandlePostArticle);
 articleRouter.route("/").get(HandleGetArticles);
-articleRouter.route('/:id').get(HandleGetOneArticle);
+articleRouter.route('/profile').get(HandleGetProfileArticles);
 
 module.exports = articleRouter;

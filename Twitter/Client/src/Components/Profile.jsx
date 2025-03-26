@@ -1,17 +1,37 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Navbar from "./Navbar";
+import Aside from "./Aside";
+import Feed from "./Feed";
+import axios from "axios";
 
 export default function Profile({ user }) {
   const navigate = useNavigate();
+  const [profileArticles, setProfileArticles] = useState([]);
 
   useEffect(() => {
     if (!user) {
-      navigate("/login");
+      return navigate("/login");
     }
+    getProfileFeed();
   }, [user, navigate]);
+
+  const getProfileFeed = async () => {
+    await axios
+      .get("/api/data/profile")
+      .then((res) => {
+        setProfileArticles(res.data);
+      })
+      .catch((err) => console.log(err));
+  };
+
   return (
     <>
-      <h1 className="text-white text-5xl text-center p-8">Profile</h1>
+      <div className="flex flex-wrap justify-center text-white">
+        <Navbar />
+        <Feed user={user} profileFeed={profileArticles} />
+        <Aside />
+      </div>
     </>
   );
 }

@@ -5,6 +5,7 @@ import Navbar from "./Navbar";
 export default function SignUp() {
   let [input, setInput] = useState({
     username: "",
+    fullname: '',
     password: "",
   });
 
@@ -20,6 +21,7 @@ export default function SignUp() {
     // reseting input fields
     setInput({
       username: "",
+      fullname: '',
       password: "",
     });
   };
@@ -46,6 +48,22 @@ export default function SignUp() {
                     name="username"
                     type="text"
                     placeholder="User Name"
+                  />
+                  <br />
+                  <br />
+                  <label htmlFor="" className="text-lg">
+                    Full Name :{" "}
+                  </label>
+                  <input
+                  required
+                    className="border rounded-lg py-2 px-4 outline-0 mx-4"
+                    value={input.fullname}
+                    onChange={(e) =>
+                      setInput({ ...input, [e.target.name]: e.target.value })
+                    }
+                    name="fullname"
+                    type="text"
+                    placeholder="Full Name"
                   />
                   <br />
                   <br />

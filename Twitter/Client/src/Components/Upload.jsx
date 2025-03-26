@@ -1,12 +1,11 @@
 import { useState, useRef, useEffect } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export default function Upload({ addArticle, user }) {
   let initPostInfo = {
-    userName: "",
     article: "",
-    imgUrl: '',
+    imgUrl: "",
   };
 
   // state variables
@@ -26,13 +25,13 @@ export default function Upload({ addArticle, user }) {
   // handle submit
   let handleSubmit = async (e) => {
     e.preventDefault();
-    if (postInfo.article === "" || !postInfo.userName || !postInfo.imgUrl) return;
+    if (postInfo.article === "" || !postInfo.imgUrl) return;
     if (!user) {
-      navigate('/login');
+      navigate("/login");
       return;
     }
     let newArticle = {
-      userName: postInfo.userName,
+      userName: user.username,
       article: postInfo.article,
       imgUrl: postInfo.imgUrl,
     };
@@ -71,24 +70,6 @@ export default function Upload({ addArticle, user }) {
   return (
     <div className="px-4 border border-zinc-600">
       <form onSubmit={handleSubmit} encType="multipart/form-data">
-        <input
-          name="userName"
-          placeholder="User Name"
-          type="text"
-          value={postInfo.userName}
-          onChange={handleInputChange}
-          className=""
-          required
-        />
-        <input
-          name="imgUrl"
-          placeholder="Image url"
-          type="text"
-          value={postInfo.imgUrl}
-          onChange={handleInputChange}
-          className=""
-          required
-        />
         <textarea
           ref={textareaRef}
           name="article"
@@ -103,6 +84,16 @@ export default function Upload({ addArticle, user }) {
         >
           {postInfo.article}
         </textarea>
+        <br />
+        <input
+          name="imgUrl"
+          placeholder="Image url"
+          type="text"
+          value={postInfo.imgUrl}
+          onChange={handleInputChange}
+          className="outline-none"
+          required
+        />
         <div className="flex justify-between mb-4">
           {/* file field  */}
           {/* <input
@@ -113,7 +104,7 @@ export default function Upload({ addArticle, user }) {
           /> */}
           <button
             type="submit"
-            className="bg-zinc-500 text-black text-lg py-1 px-5 rounded-full mx-4 my-2"
+            className="bg-zinc-500 text-black text-lg py-1 px-5 rounded-full mx-4 my-2 hover:cursor-pointer"
           >
             Post
           </button>

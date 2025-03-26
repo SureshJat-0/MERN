@@ -1,13 +1,13 @@
 const User = require("../Models/user.js");
 
 const handleSignupPost = async (req, res) => {
-  const { username, password } = req.body;
-  if (!username || !password) {
+  const { username, fullname, password } = req.body;
+  if (!username || !password || !fullname) {
     return res
       .status(400)
       .send({ Status: "Error", message: "Fill all fields" });
   }
-  let newUser = new User({ username });
+  let newUser = new User({ username, fullname });
   const registerdUser = await User.register(newUser, password);
   console.log(registerdUser);
   res.json({ status: "Success" });

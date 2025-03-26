@@ -1,12 +1,11 @@
-import Twitter from "./Twitter"
+import Twitter from "./Twitter";
 
 function App() {
-
   return (
     <>
       <Twitter />
     </>
-  )
+  );
 }
 
-export default App
+export default App;

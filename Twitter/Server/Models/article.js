@@ -1,8 +1,9 @@
 const mongoose = require('mongoose');
 
 const articleSchema = mongoose.Schema({
-    userName: {
-        type: String,
+    owner: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
     },
     article: {
         type: String,

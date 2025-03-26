@@ -1,6 +1,6 @@
 import HomeFeed from "./HomeFeed";
 import SignUP from "./Components/SignUp";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, BrowserRouter } from "react-router-dom";
 import Login from "./Components/Login";
 import Profile from "./Components/Profile";
 import { useEffect, useState } from "react";
@@ -16,7 +16,7 @@ export default function Twitter() {
         withCredentials: true,
       })
       .then((res) => {
-        console.log('Login : ', res.data.loggedIn);
+        console.log("Login : ", res.data.loggedIn);
         if (res.data.user) {
           setUser(res.data.user);
         } else {
@@ -39,18 +39,23 @@ export default function Twitter() {
 
   return (
     <>
-      <Routes>
-        <Route path="/" element={<HomeFeed user={user}/>} />
-        <Route path="/signup" element={<SignUP />} />
-        <Route
-          path="/login"
-          element={
-            <Login checkAuth={checkAuth} handleSetUser={handleSetUser} />
-          }
-        />
-        <Route path="/logout" element={<Logout handleSetUser={handleSetUser}/>} />
-        <Route path="/profile" element={<Profile user={user} />} />
-      </Routes>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<HomeFeed user={user} />} />
+          <Route path="/signup" element={<SignUP />} />
+          <Route
+            path="/login"
+            element={
+              <Login checkAuth={checkAuth} handleSetUser={handleSetUser} />
+            }
+          />
+          <Route
+            path="/logout"
+            element={<Logout handleSetUser={handleSetUser} />}
+          />
+          <Route path="/profile" element={<Profile user={user} />} />
+        </Routes>
+      </BrowserRouter>
     </>
   );
 }
