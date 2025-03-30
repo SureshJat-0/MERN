@@ -27,7 +27,7 @@ export default function Feed({ user, profileFeed }) {
   }, []);
 
   return (
-    <div className="w-[45vw] border border-zinc-600 border-y-0 ms-20">
+    <div className="w-[45vw] border border-t-0 border-zinc-600 border-y-0 ms-20">
       <Upload addArticle={addArticle} user={user} />
       <AllPosts
         allPosts={location.pathname === "/" ? posts : profileFeed}

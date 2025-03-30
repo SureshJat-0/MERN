@@ -10,16 +10,11 @@ export default function Upload({ addArticle, user }) {
 
   // state variables
   let [postInfo, setPostInfo] = useState(initPostInfo);
-  // let [file, setFile] = useState(null);
 
-  // handling input changes in the text fields and file fields
+  // handling input changes in the text fields
   let handleInputChange = (e) => {
     setPostInfo({ ...postInfo, [e.target.name]: e.target.value });
   };
-
-  // let handleFileChange = (e) => {
-  //   setFile(e.target.files[0]);
-  // };
 
   const navigate = useNavigate();
   // handle submit
@@ -27,6 +22,11 @@ export default function Upload({ addArticle, user }) {
     e.preventDefault();
     if (postInfo.article === "" || !postInfo.imgUrl) return;
     if (!user) {
+      await axios.post(
+        "/api/flash/info",
+        { infoMsg: "You must be loggedIn to post Article" },
+        { withCredentials: true }
+      );
       navigate("/login");
       return;
     }
@@ -36,39 +36,22 @@ export default function Upload({ addArticle, user }) {
       imgUrl: postInfo.imgUrl,
     };
     addArticle(newArticle);
-
-    // preparing form data
-    // let formData = new FormData();
-    // formData.append("userName", postInfo.userName);
-    // formData.append("article", postInfo.article);
-    // formData.append("avatar", file);
-    // reseting form
     setPostInfo(initPostInfo);
-    // setFile(null);
-
-    // sending data to BackEnd
-    // try {
-    //   await axios.post("/api/upload", formData, {
-    //     headers: { "Content-Type": "multipart/form-data" },
-    //   });
-    // } catch (err) {
-    //   console.log(err);
-    // }
   };
 
-  // Misunderstanding
+  // Increse the height when Enter key is pressed
   const textareaRef = useRef(null);
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto"; // Reset height
       textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`; // Set new height
     }
-  }, [postInfo.article]); // Runs when text changes
+  }, [postInfo.article]);
 
   // till here
 
   return (
-    <div className="px-4 border border-zinc-600">
+    <div className="px-4 border border-t-0 border-zinc-600">
       <form onSubmit={handleSubmit} encType="multipart/form-data">
         <textarea
           ref={textareaRef}
@@ -104,7 +87,7 @@ export default function Upload({ addArticle, user }) {
           /> */}
           <button
             type="submit"
-            className="bg-zinc-500 text-black text-lg py-1 px-5 rounded-full mx-4 my-2 hover:cursor-pointer"
+            className="bg-zinc-500 font-bold text-black text-lg py-1 px-5 rounded-full mx-4 my-2 hover:cursor-pointer"
           >
             Post
           </button>

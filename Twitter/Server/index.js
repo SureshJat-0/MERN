@@ -3,10 +3,12 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const articleRouter = require("./Routes/article.js");
 const UserRouter = require("./Routes/User.js");
+const flashRouter = require("./Routes/flash.js");
 const sessionMiddleware = require("./Middlewares/session.js");
 const passport = require("passport");
 const User = require("./Models/user.js");
 const LocalStratagy = require("passport-local");
+const flash = require("connect-flash");
 
 const { connectMongo } = require("./config.js");
 const url =
@@ -21,6 +23,8 @@ app.use(
     credentials: true,
   })
 );
+
+app.use(flash());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
@@ -39,6 +43,9 @@ connectMongo(url)
     console.log("Mongodb Connected");
   })
   .catch((err) => console.log("Mongo Error"));
+
+// Route for retrive flash message
+app.use("/api/flash", flashRouter);
 
 // Article Router
 app.use("/api/data", articleRouter);

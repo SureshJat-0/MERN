@@ -27,7 +27,7 @@ export default function Profile({ user }) {
 
   return (
     <>
-      <div className="flex flex-wrap justify-center text-white">
+      <div className="flex flex-wrap justify-end text-white mx-24">
         <Navbar />
         <Feed user={user} profileFeed={profileArticles} />
         <Aside />

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import Navbar from "./Navbar";
 import { useNavigate } from "react-router-dom";
@@ -9,6 +9,10 @@ export default function Login({ checkAuth, handleSetUser }) {
     password: "",
   });
 
+  // flash messages
+  let [infoMsg, setInfoMsg] = useState("");
+  let [errorMsg, setErrorMsg] = useState("");
+
   const navigate = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -16,16 +20,29 @@ export default function Login({ checkAuth, handleSetUser }) {
       .post("/api/auth/login", input, { withCredentials: true })
       .then((res) => {
         console.log("User Logged In");
-        navigate('/');
+        navigate("/");
         handleSetUser(res.data.user);
         checkAuth();
       })
-      .catch((err) => console.log("erro"));
+      .catch((err) => {
+        console.log("Invalid credentials");
+        getFlashMsg();
+      });
     // reseting input fields
     setInput({
       username: "",
       password: "",
     });
+  };
+  
+  useEffect(() => {
+    getFlashMsg();
+  }, []);
+
+  const getFlashMsg = async () => {
+    let res = await axios.get("/api/flash/show");
+    setInfoMsg(res.data.info[0]);
+    setErrorMsg(res.data.error[0]);
   };
 
   return (
@@ -33,7 +50,18 @@ export default function Login({ checkAuth, handleSetUser }) {
       <div className="flex flex-wrap justify-center text-white">
         <Navbar />
 
-        <div className="w-[70vw] flex justify-center items-start pt-12">
+        <div className="w-[70vw] flex flex-col justify-center items-center pt-12">
+          {/* flash messages  */}
+          {infoMsg && (
+            <p className="border rounded-lg border-blue-600 bg-blue-950 px-4 py-2 mb-4 text-blue-300">
+              {infoMsg}
+            </p>
+          )}
+          {errorMsg && (
+            <p className="border rounded-lg border-red-600 bg-red-950 px-4 py-2 mb-4 text-red-300">
+              {errorMsg}
+            </p>
+          )}
           <br />
           <form className="rounded-2xl pb-8 px-8 border">
             <h2 className="text-4xl py-4 my-4 text-center">Login</h2>
