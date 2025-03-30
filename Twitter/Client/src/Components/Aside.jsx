@@ -14,6 +14,7 @@ export default function Aside() {
     let res = await axios.get("/api/flash/show");
     setSuccessMsg(res.data.success[0]);
     setErrorMsg(res.data.error[0]);
+    setInfoMsg(res.data.info[0]);
   };
 
   return (
@@ -44,7 +45,7 @@ export default function Aside() {
           Subscribe to unlock new features and if eligible, receive a share of
           revenue.
         </p>
-        <button className="bg-blue-500 font-bold px-4 py-2 rounded-2xl mt-4">
+        <button className="bg-blue-500 font-bold px-4 py-2 rounded-2xl mt-4 cursor-pointer">
           Subscribe
         </button>
       </div>

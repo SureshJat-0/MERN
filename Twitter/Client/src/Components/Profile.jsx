@@ -9,8 +9,17 @@ export default function Profile({ user }) {
   const navigate = useNavigate();
   const [profileArticles, setProfileArticles] = useState([]);
 
+  const setFlashInfo = async () => {
+    await axios.post(
+      "/api/flash/info",
+      { infoMsg: "You must be loggedIn to access your profile" },
+      { withCredentials: true }
+    );
+  };
+
   useEffect(() => {
     if (!user) {
+      setFlashInfo();
       return navigate("/login");
     }
     getProfileFeed();
@@ -28,7 +37,7 @@ export default function Profile({ user }) {
   return (
     <>
       <div className="flex flex-wrap justify-end text-white mx-24">
-        <Navbar />
+        <Navbar user={user}/>
         <Feed user={user} profileFeed={profileArticles} />
         <Aside />
       </div>

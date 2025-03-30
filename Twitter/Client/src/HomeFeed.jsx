@@ -5,7 +5,7 @@ import Navbar from "./Components/Navbar";
 export default function HomeFeed({ user }) {
   return (
     <div className="flex flex-wrap justify-end text-white mx-24">
-      <Navbar />
+      <Navbar user={user}/>
       <Feed user={user} />
       <Aside />
     </div>

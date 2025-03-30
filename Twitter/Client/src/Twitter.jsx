@@ -6,6 +6,7 @@ import Profile from "./Components/Profile";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Logout from "./Components/Logout";
+import NotFound from './Components/NotFound';
 
 export default function Twitter() {
   let [user, setUser] = useState(null);
@@ -54,6 +55,7 @@ export default function Twitter() {
             element={<Logout handleSetUser={handleSetUser} />}
           />
           <Route path="/profile" element={<Profile user={user} />} />
+          <Route path="*" element={<NotFound user={user}/>} />
         </Routes>
       </BrowserRouter>
     </>

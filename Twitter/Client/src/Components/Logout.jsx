@@ -4,13 +4,12 @@ import { useNavigate } from "react-router-dom";
 
 export default function Logout({ handleSetUser }) {
   const navigate = useNavigate();
-  const [flashMsg, setFlashMsg] = useState("");
 
   const handleLogout = async () => {
     await axios
       .get("/api/auth/logout")
-      .then(async(res) => {
-        console.log("Loggeout successful!");
+      .then((res) => {
+        console.log("Logout successful!");
       })
       .catch((err) => console.log(err));
   };

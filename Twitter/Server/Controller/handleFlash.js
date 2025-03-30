@@ -11,10 +11,7 @@ const setInfoMsg = (req, res) => {
     res.send(req.body);
 };
 
-const setErrorMsg = () => {};
-
 module.exports = {
   showFlashMsg,
   setInfoMsg,
-  setErrorMsg,
 };
