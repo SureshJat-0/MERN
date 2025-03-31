@@ -1,5 +1,6 @@
 const express = require("express");
 const UserRouter = express.Router();
+const { asyncWrap } = require("../Errors/asyncWrap.js");
 
 const {
   handleSignupPost,
@@ -8,11 +9,11 @@ const {
 } = require("../Controller/UserHandler.js");
 const isLoggedIn = require("../Middlewares/auth.js");
 
-UserRouter.route("/signup").post(handleSignupPost);
+UserRouter.route("/signup").post(asyncWrap(handleSignupPost));
 UserRouter.route("/login").post(handleLoginPost);
 UserRouter.route("/logout").get(handleLogout);
 
 // Check for auth
-UserRouter.route("/status").get(isLoggedIn);
+UserRouter.route("/status").get(asyncWrap(isLoggedIn));
 
 module.exports = UserRouter;

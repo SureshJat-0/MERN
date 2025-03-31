@@ -23,12 +23,7 @@ const HandleGetArticles = async (req, res) => {
 };
 
 const HandleGetProfileArticles = async (req, res) => {
-  let allArticles = await Article.find({}).populate('owner');
-  let profileArticles = allArticles.filter((article) => {
-    if (article.owner._id.equals(req.user._id)) {
-      return article;
-    }
-  });
+  let profileArticles = await Article.find({owner: req.user._id}).populate('owner');
   res.status(200).json(profileArticles);
 };
 
