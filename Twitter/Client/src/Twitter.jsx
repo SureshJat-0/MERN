@@ -1,12 +1,12 @@
 import HomeFeed from "./HomeFeed";
 import SignUP from "./Components/SignUp";
-import { Routes, Route, BrowserRouter } from "react-router-dom";
 import Login from "./Components/Login";
 import Profile from "./Components/Profile";
-import { useEffect, useState } from "react";
-import axios from "axios";
 import Logout from "./Components/Logout";
 import NotFound from './Components/NotFound';
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { Routes, Route, BrowserRouter } from "react-router-dom";
 
 export default function Twitter() {
   let [user, setUser] = useState(null);
