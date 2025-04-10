@@ -2,29 +2,22 @@ import { useState } from "react";
 import Question from "./Question";
 import Start from "./Start";
 import Result from "./Result";
+import axios from "axios";
 
-let Questions = [
-  {
-    question: "1.Fastest animal in the world?",
-    options: ["Tiger", "Lion", "Leopard", "Elephant"],
-    ans: "Leopard",
-  },
-  {
-    question: "2.Fastest animal in the world?",
-    options: ["Tiger", "Lion", "Leopard", "Elephant"],
-    ans: "Lion",
-  },
-  {
-    question: "3.Fastest animal in the world?",
-    options: ["Tiger", "Lion", "Leopard", "Elephant"],
-    ans: "Elephant",
-  },
-];
+// Getting Questions
+let Questions = [];
+try {
+  const res = await axios.get("http://localhost:3000/api/quiz/questions");
+  Questions = res.data;
+} catch (err) {
+  console.log("Error: ", err);
+}
 
 export default function Quiz() {
   let [isStart, setIsStart] = useState(false);
   let [showRes, setShowRes] = useState(false);
   let [currInd, setCurrInd] = useState(0);
+  let [correctAns, setCorrectAns] = useState(0);
 
   const handleStart = () => {
     setIsStart(true);
@@ -52,7 +45,7 @@ export default function Quiz() {
     return (
       <div className="flex justify-center items-center flex-col">
         <h1 className="text-4xl font-bold text-center m-4">Quiz Game</h1>
-        <Result />
+        <Result correctAns={correctAns} length={Questions.length} />
       </div>
     );
   }
@@ -62,7 +55,12 @@ export default function Quiz() {
       <h1 className="text-4xl font-bold text-center m-4">Quiz Game</h1>
       <Question
         question={Questions[currInd]}
+        length={Questions.length}
+        currInd={currInd}
         handleQuestionsChange={handleQuestionsChange}
+        key={currInd}
+        correctAns={correctAns}
+        setCorrectAns={setCorrectAns}
       />
     </div>
   );
