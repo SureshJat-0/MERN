@@ -3,14 +3,15 @@ const port = 3000;
 const app = express();
 const connectMongo = require("./mongoConnect.js");
 const QuizRouter = require("./Routes/quiz.js");
-const cors = require('cors');
-
+const cors = require("cors");
 
 // Allow requests from frontend
-app.use(cors({
-  origin: 'http://localhost:5173',
-  credentials: true,
-}))
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
 
 const dbUrl =
   "mongodb://127.0.0.1:27017/LogicLoop?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.3.4";

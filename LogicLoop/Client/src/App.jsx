@@ -3,6 +3,7 @@ import Navbar from "./Components/Navbar";
 import Home from "./Pages/Home";
 import Explore from "./Pages/Explore";
 import Quiz from "./Components/Quiz/Quiz";
+import Memory from "./Components/Memory/Memory";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/explore" element={<Explore />} />
           <Route path="/explore/quiz" element={<Quiz />} />
+          <Route path="/explore/game" element={<Memory n={9}/>} />
         </Routes>
       </BrowserRouter>
     </div>
