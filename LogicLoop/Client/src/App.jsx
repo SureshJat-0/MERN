@@ -20,7 +20,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/explore" element={<Explore />} />
           <Route path="/explore/quiz" element={<Quiz />} />
-          <Route path="/explore/game" element={<Memory n={9}/>} />
+          <Route path="/explore/game" element={<Memory n={9} />} />
         </Routes>
       </BrowserRouter>
     </div>

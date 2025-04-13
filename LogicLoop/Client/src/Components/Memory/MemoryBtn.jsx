@@ -6,9 +6,10 @@ export default function MemoryBtn({
   setIsStart,
   currInd,
   setCurrInd,
-  win,
-  setWin,
+  stop,
+  setStop,
   resetTrigger,
+  setWin,
 }) {
   let [showBtn, setShowBtn] = useState(false);
   let [isBtnCurrect, setIsBtnCurrent] = useState(false);
@@ -22,30 +23,31 @@ export default function MemoryBtn({
     e.preventDefault();
     if (!isStart) return;
     setShowBtn(true);
-    checkForWin(e.target.value, currInd);
+    checkForWin(parseInt(e.target.value), currInd);
   };
 
   const checkForWin = (val, ind) => {
-    if (val == ind) {
+    if (val === ind) {
+      if (ind === 9) setWin(true);
       setIsBtnCurrent(true);
       setCurrInd((preVal) => preVal + 1);
     } else {
       setIsStart(false);
-      setWin(false);
+      setStop(false);
       return;
     }
   };
 
   const getButtonStyle = () => {
-      if (isBtnCurrect) return "!bg-green-400";
-    if (!win) return "bg-red-400";
+    if (isBtnCurrect) return "!bg-green-400";
+    if (!stop) return "bg-red-400";
     return "bg-gray-50";
   };
 
   return (
     <div className={`rounded-lg shadow-lg ${getButtonStyle()}`}>
       <button
-        disabled={!isStart}
+        disabled={!isStart || showBtn}
         value={num}
         className="h-full w-full"
         onClick={onBtnClick}
