@@ -28,10 +28,10 @@ export default function Navbar() {
       <div className="">
         <ul className="flex items-center">
           <li className="text-lg mx-2 my-1 px-4 py-1 cursor-pointer rounded-lg bg-purple-100 text-purple-800 shadow-lg">
-            SignUp
+            <Link to="/signup">Sign Up</Link>
           </li>
           <li className="text-lg mx-2 my-1 px-4 py-1 cursor-pointer rounded-lg bg-purple-500 text-white shadow-lg">
-            Login
+            <Link to="/login">Login</Link>
           </li>
         </ul>
       </div>

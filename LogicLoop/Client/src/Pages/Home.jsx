@@ -21,15 +21,21 @@ export default function Home() {
         Introducing
         <span className="text-purple-500 font-bold"> LogicLoop Web </span>
       </h1>
-      <p className={`text-6xl font-bold text-center leading-tight ${textAnimationStyle()}`}>
+      <p
+        className={`text-6xl font-bold text-center leading-tight ${textAnimationStyle()}`}
+      >
         "Everyone loves sport. <br />
         And everyone loves game."
       </p>
-      <p className={`text-xl text-gray-600 font-bold my-2 ${textAnimationStyle()}`}>-Suresh Jat</p>
+      <p
+        className={`text-xl text-gray-600 font-bold my-2 ${textAnimationStyle()}`}
+      >
+        -Suresh Jat
+      </p>
       <hr className="w-1/2 border-t-2 border-gray-400 my-6" />
       <div className="flex">
         <button className="py-2 px-6 bg-purple-600 text-white rounded-lg text-lg mx-4 shadow-lg hover:scale-105 transition-transform ease-in duration-200">
-          Sign up for free {">"}
+          <Link to="/signup"> Sign up for free {">"}</Link>
         </button>
         <Link to="/explore">
           {" "}

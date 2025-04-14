@@ -7,7 +7,7 @@ import axios from "axios";
 // Getting Questions
 let Questions = [];
 try {
-  const res = await axios.get("http://localhost:3000/api/quiz/questions");
+  const res = await axios.get("/api/quiz/questions");
   Questions = res.data;
 } catch (err) {
   console.log("Error: ", err);
