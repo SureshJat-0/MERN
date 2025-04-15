@@ -2,7 +2,7 @@ import ExploreCard from "../Components/ExploreCard";
 
 export default function Explore() {
   const titles = ["Quiz Game", "Memory Game"];
-  const paths = ["/explore/quiz", "/explore/game"];
+  const paths = ["/explore/quiz", "/explore/memory"];
   const imgAlts = ["quiz-game", "memory-game"];
   const imgUrls = [
     "https://images.unsplash.com/photo-1652077859695-de2851a95620?q=80&w=2960&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
@@ -14,6 +14,7 @@ export default function Explore() {
         {titles.map((title, ind) => {
           return (
             <ExploreCard
+              key={ind}
               path={paths[ind]}
               title={titles[ind]}
               imgUrl={imgUrls[ind]}

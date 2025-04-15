@@ -3,7 +3,7 @@ import InputComp from "./InputComp";
 import { useState } from "react";
 import axios from "axios";
 
-export default function Signup() {
+export default function Signup({ setParentUser }) {
   let [user, setUser] = useState({
     username: "",
     fullname: "",
@@ -26,7 +26,7 @@ export default function Signup() {
         alert("Please fill in all fields");
         return;
       }
-      const res = await axios.post("/api/user/signup", user);
+      const res = await axios.post("/api/auth/signup", user);
       console.log("Signup success:", res.data);
       // Reset form fields
       setUser({
@@ -34,6 +34,7 @@ export default function Signup() {
         fullname: "",
         password: "",
       });
+      setParentUser(user);
       setChildInputReset(true);
       navigate("/");
     } catch (error) {

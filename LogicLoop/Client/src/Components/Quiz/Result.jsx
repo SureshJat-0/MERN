@@ -1,6 +1,19 @@
+import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 
-export default function Result({ correctAns, length }) {
+export default function Result({ correctAns, length, sendHistory }) {
+  // Sending result data to backend for history
+  const hasSent = useRef(false);
+  // Because it runs twice in development mode
+  useEffect(() => {
+    if (!hasSent.current) {
+      const name = "QuizGame";
+      const score = correctAns;
+      sendHistory(name, score);
+      hasSent.current = true;
+    }
+  });
+
   return (
     <div className="flex flex-col items-center bg-white/30 border-white/30 backdrop-blur-lg rounded-lg px-40 py-8 shadow-lg">
       <p className="my-1 text-xl">You have completed the Quiz.</p>

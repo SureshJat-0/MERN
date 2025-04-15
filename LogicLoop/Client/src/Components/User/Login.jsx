@@ -3,7 +3,7 @@ import InputComp from "./InputComp";
 import axios from "axios";
 import { useState } from "react";
 
-export default function Signup() {
+export default function Login({ getAuthStatus }) {
   let [user, setUser] = useState({
     username: "",
     password: "",
@@ -19,15 +19,16 @@ export default function Signup() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('/api/user/login', user);
+      await axios.post("/api/auth/login", user);
       console.log("Login success");
       // Reset form fields
       setUser({
         username: "",
         password: "",
       });
+      getAuthStatus();
       setChildInputReset(true);
-      navigate('/');
+      navigate("/");
     } catch (error) {
       console.error("Login error:", error.response?.data || error.message);
       alert("Login failed. Please check your credentials.");

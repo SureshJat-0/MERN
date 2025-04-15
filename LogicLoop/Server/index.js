@@ -4,6 +4,7 @@ const app = express();
 const connectMongo = require("./mongoConnect.js");
 const QuizRouter = require("./Routes/quiz.js");
 const UserRouter = require("./Routes/User.js");
+const HistoryRouter = require('./Routes/History.js');
 const cors = require("cors");
 const passport = require("passport");
 const User = require("./Models/User.js");
@@ -41,7 +42,8 @@ connectMongo(dbUrl)
   .catch((err) => console.log("Mongo Error"));
 
 app.use("/api/quiz", QuizRouter);
-app.use("/api/user", UserRouter);
+app.use("/api/auth", UserRouter);
+app.use('/api/history', HistoryRouter);
 
 app.listen(port, () => {
   console.log(`Server started : http://localhost:${port}`);

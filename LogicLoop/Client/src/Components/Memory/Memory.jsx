@@ -1,13 +1,31 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import MemoryBtn from "./MemoryBtn";
+import { useNavigate } from "react-router-dom";
 
-export default function Memory({ n }) {
+export default function Memory({ n, user, sendHistory }) {
   const [start, setStart] = useState(false);
   const [currInd, setCurrInd] = useState(1);
   const [stop, setStop] = useState(true);
   const [numbers, setNumbers] = useState([]);
   const [resetTrigger, setResetTrigger] = useState(0);
   const [win, setWin] = useState(false);
+
+  // Send history to backend
+  const hasSentHistory = useRef(false);
+  useEffect(() => {
+    if ((win || !stop) && !hasSentHistory.current) {
+      sendHistory("MemoryGame", currInd - 1);
+      hasSentHistory.current = true;
+    }
+  }, [stop, win]);
+
+  // Check if user is logged in
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!user) {
+      navigate("/login");
+    }
+  });
 
   // Generate arr of 1 to 9
   const generateShuffleArray = () => {
@@ -25,7 +43,9 @@ export default function Memory({ n }) {
   }, [n]);
 
   const getMessage = () => {
-    if (win) return "🎉 Congratulations, You Won!";
+    if (win) {
+      return "🎉 Congratulations, You Won!";
+    }
     if (start) return "";
     return stop ? "Remember the position of all numbers." : "You Lose the Game";
   };
@@ -38,6 +58,7 @@ export default function Memory({ n }) {
     setNumbers(generateShuffleArray());
     setResetTrigger((prev) => prev + 1); // trigger child reset
     setWin(false);
+    hasSentHistory.current = false;
   };
 
   return (
