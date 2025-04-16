@@ -4,7 +4,7 @@ const app = express();
 const connectMongo = require("./mongoConnect.js");
 const QuizRouter = require("./Routes/quiz.js");
 const UserRouter = require("./Routes/User.js");
-const HistoryRouter = require('./Routes/History.js');
+const HistoryRouter = require("./Routes/History.js");
 const cors = require("cors");
 const passport = require("passport");
 const User = require("./Models/User.js");
@@ -19,11 +19,16 @@ app.use(
   })
 );
 
-app.use(session({
-  secret: "MySureshSecret",
-  resave: false,
-  saveUninitialized: false,
-}))
+app.use(
+  session({
+    secret: "MySureshSecret",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 24 * 7, // 7 day
+    }
+  })
+);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -43,7 +48,7 @@ connectMongo(dbUrl)
 
 app.use("/api/quiz", QuizRouter);
 app.use("/api/auth", UserRouter);
-app.use('/api/history', HistoryRouter);
+app.use("/api/history", HistoryRouter);
 
 app.listen(port, () => {
   console.log(`Server started : http://localhost:${port}`);

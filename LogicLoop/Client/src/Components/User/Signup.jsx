@@ -3,7 +3,7 @@ import InputComp from "./InputComp";
 import { useState } from "react";
 import axios from "axios";
 
-export default function Signup({ setParentUser }) {
+export default function Signup({ getAuthStatus }) {
   let [user, setUser] = useState({
     username: "",
     fullname: "",
@@ -34,7 +34,7 @@ export default function Signup({ setParentUser }) {
         fullname: "",
         password: "",
       });
-      setParentUser(user);
+      getAuthStatus();
       setChildInputReset(true);
       navigate("/");
     } catch (error) {

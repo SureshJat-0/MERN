@@ -35,6 +35,21 @@ export default function Navbar({ user, setUser }) {
           >
             Explore
           </Link>
+
+          <div className="group relative text-lg cursor-pointer">
+            <button>
+              Games <i className="fa fa-caret-down"></i>
+            </button>
+            <div className="hidden px-4 group-hover:block absolute group-hover:bg-gray-400/10">
+              <Link to="/explore/quiz" className="block px-2 py-1">
+                Quiz
+              </Link>
+              <Link to="/explore/memory" className="block px-2 py-1">
+                Memory
+              </Link>
+            </div>
+          </div>
+
           <Link
             to="/history"
             className="text-lg mx-2 my-1 px-2 py-1 cursor-pointer hover:border-b-2 border-black transition-all ease-in box-border"
