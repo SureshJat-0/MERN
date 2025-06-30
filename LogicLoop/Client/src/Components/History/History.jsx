@@ -31,7 +31,9 @@ export default function History({ user }) {
       ) : (
         <>
           {history.length === 0 ? (
-            "No history found"
+            <div className="flex justify-center m-4 text-xl">
+            No history found
+            </div>
           ) : (
             <div className="flex flex-col justify-center items-center m-4">
               <h1 className="text-3xl font-bold mb-2">History</h1>
