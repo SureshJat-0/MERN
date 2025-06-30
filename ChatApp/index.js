@@ -16,7 +16,7 @@ io.on('connection', (socket) => {
         console.log('New Message:', msg);
         callback(null, 'Received your message!');
         // emit to every socket
-        io.emit('message', {msg, senderId: socket.id});
+        io.emit('message', {msg, senderNickname: socket.nickname, senderId: socket.id});
     });
     // getting acknowledgement form the server
     socket.on('delivery-ack', (data) => {
@@ -26,9 +26,16 @@ io.on('connection', (socket) => {
             // sending the acknowledgement to sender that we received the data
             senderSocket.emit('delivered-to-user', {
                 msg: data.msg,
+                receiverNickname: socket.nickname, // receiver nickname
                 receiverSocket: socket.id, // receiver id
             })
         }
+    })
+
+    // setting nickname for socket
+    socket.on('set-nickname', (nickname) => {
+        socket.nickname = nickname;
+        console.log(`Nick-name for socketId: ${socket.id} is: "${socket.nickname}"`);
     })
 });
 
