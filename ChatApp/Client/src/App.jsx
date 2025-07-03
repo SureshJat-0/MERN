@@ -1,17 +1,20 @@
-import ChatPage from "./Pages/ChatPage";
 import "./App.css";
-import Groups from "./Pages/Groups";
+import ChatLayout from "./Pages/ChatLayout";
 import Login from "./Pages/Login";
+import Signup from "./Pages/Signup";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 function App() {
   return (
-    <div className="flex flex-row w-screen justify-start">
-      <Groups />
-      <ChatPage />
-    </div>
-    // <div className="">
-    //   <Login />
-    // </div>
+    <>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<ChatLayout />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/login" element={<Login />} />
+        </Routes>
+      </BrowserRouter>
+    </>
   );
 }
 
