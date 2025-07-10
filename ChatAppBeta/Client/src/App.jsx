@@ -7,17 +7,23 @@ import { useSocket } from "./context/socket";
 function App() {
   const socket = useSocket();
   const [users, setUsers] = useState([]);
+  const [groups, setGroups] = useState(["General", "Random"]);
   const [serverMsgs, setServerMsgs] = useState([]);
 
+  const handleNewUserJoin = (usersData) => {
+    setUsers(usersData);
+  };
+  const handleGetServerMsgs = (serverMsgsData) => {
+    setServerMsgs(serverMsgsData);
+  };
   useEffect(() => {
-    socket.on("newUserJoin", (usersData) => {
-      setUsers(usersData);
-    });
-    // geting messages from the server
-    socket.on("getServerMsgs", (serverMsgsData) => {
-      setServerMsgs(serverMsgsData);
-    });
-  });
+    socket.on("newUserJoin", handleNewUserJoin);
+    socket.on("getServerMsgs", handleGetServerMsgs);
+    return () => {
+      socket.off("newUserJoin", handleNewUserJoin);
+      socket.off("getServerMsgs", handleGetServerMsgs);
+    };
+  }, [socket]);
 
   return (
     <BrowserRouter>
@@ -25,7 +31,9 @@ function App() {
         <Route path="/" element={<Login />} />
         <Route
           path="/chat"
-          element={<ChatPage users={users} serverMsgs={serverMsgs} />}
+          element={
+            <ChatPage users={users} serverMsgs={serverMsgs} groups={groups} />
+          }
         />
       </Routes>
     </BrowserRouter>

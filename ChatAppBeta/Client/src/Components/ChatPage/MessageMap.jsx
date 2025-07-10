@@ -1,5 +1,5 @@
-export default function Messages(props) {
-  const { msg, index } = props.values;
+export default function MessagesMap(props) {
+  const { msg, index } = props.value;
   return (
     <>
       <li key={index}>

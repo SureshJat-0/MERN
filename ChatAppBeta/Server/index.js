@@ -65,7 +65,7 @@ io.on("connect", (socket) => {
     if (msgData.groupChat) {
       const groupMessage = {
         sender: msgData.senderUsername,
-        content: msgData.messageInput,
+        content: msgData.message,
         timestamp: Date.now(),
       };
       if (!groupMessages[msgData.groupChat])
@@ -80,7 +80,7 @@ io.on("connect", (socket) => {
       const key = getKey(msgData.senderUsername, msgData.receiverUsername);
       const message = {
         sender: msgData.senderUsername,
-        content: msgData.messageInput,
+        content: msgData.message,
         timestamp: Date.now(),
       };
       if (!messages[key]) messages[key] = [];

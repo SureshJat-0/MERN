@@ -2,23 +2,26 @@ import { useState } from "react";
 import { useSocket } from "../context/socket";
 import { useUser } from "../context/User";
 import UserMap from "../Components/ChatPage/UserMap";
-import MessageMap from "../Components/ChatPage/MessageMsp";
+import MessageMap from "../Components/ChatPage/MessageMap";
 
-export default function ChatPage({ users, serverMsgs }) {
+export default function ChatPage({ users, serverMsgs, groups }) {
   const socket = useSocket();
-  const [messageInput, setMessageInput] = useState("");
+  const [message, setMessage] = useState("");
   const { currentUser, chatUser, setChatUser, currentGroup, setCurrentGroup } =
     useUser();
 
   const handleMessageSend = (e) => {
     e.preventDefault();
-    socket.emit("message", {
-      messageInput,
+    const messageData = {
+      message,
       senderUsername: currentUser.username,
-      receiverUsername: chatUser.username,
       groupChat: currentGroup,
-    });
-    setMessageInput("");
+    };
+    if (chatUser) {
+      messageData.receiverUsername = chatUser.username;
+    }
+    socket.emit("message", messageData);
+    setMessage("");
   };
   const handleSelectUserForChat = (user) => {
     setCurrentGroup(null);
@@ -29,7 +32,7 @@ export default function ChatPage({ users, serverMsgs }) {
     });
   };
   const handleGroupClick = (e) => {
-    const groupName = e.target.dataset.name;
+    const groupName = e.currentTarget.dataset.name;
     setCurrentGroup(groupName);
     socket.emit("groupJoin", groupName);
   };
@@ -41,20 +44,16 @@ export default function ChatPage({ users, serverMsgs }) {
         <div className="m-2 my-6">
           <h1 className="text-center m-2 text-xl">Groups</h1>
           <ul>
-            <li
-              onClick={handleGroupClick}
-              data-name="general"
-              className="py-2 px-4 cursor-pointer border m-2"
-            >
-              <span>General</span>
-            </li>
-            <li
-              onClick={handleGroupClick}
-              data-name="random"
-              className="py-2 px-4 cursor-pointer border m-2"
-            >
-              <span>Random</span>
-            </li>
+            {groups.map((group, index) => (
+              <li
+                key={index}
+                onClick={handleGroupClick}
+                data-name={group}
+                className="py-2 px-4 cursor-pointer border m-2"
+              >
+                <span>{group}</span>
+              </li>
+            ))}
           </ul>
         </div>
         <hr />
@@ -83,7 +82,7 @@ export default function ChatPage({ users, serverMsgs }) {
         <div className="grow p-2">
           <ul>
             {serverMsgs.map((msg, index) => (
-              <MessageMap values={{ msg, index }} key={index} />
+              <MessageMap value={{ msg, index }} key={index} />
             ))}
           </ul>
         </div>
@@ -91,8 +90,8 @@ export default function ChatPage({ users, serverMsgs }) {
         <div className="w-full">
           <form onSubmit={handleMessageSend}>
             <input
-              value={messageInput}
-              onChange={(e) => setMessageInput(e.target.value)}
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
               type="text"
               placeholder="Message..."
               className="text-lg m-2 w-[90%] p-2 border rounded"
