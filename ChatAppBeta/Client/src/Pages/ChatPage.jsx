@@ -7,14 +7,8 @@ import MessageMap from "../Components/ChatPage/MessageMsp";
 export default function ChatPage({ users, serverMsgs }) {
   const socket = useSocket();
   const [messageInput, setMessageInput] = useState("");
-  const {
-    currentUser,
-    chatUser,
-    setCurrentUser,
-    setChatUser,
-    currentGroup,
-    setCurrentGroup,
-  } = useUser();
+  const { currentUser, chatUser, setChatUser, currentGroup, setCurrentGroup } =
+    useUser();
 
   const handleMessageSend = (e) => {
     e.preventDefault();
@@ -22,7 +16,7 @@ export default function ChatPage({ users, serverMsgs }) {
       messageInput,
       senderUsername: currentUser.username,
       receiverUsername: chatUser.username,
-      isGroupChat: currentGroup,
+      groupChat: currentGroup,
     });
     setMessageInput("");
   };
@@ -79,7 +73,11 @@ export default function ChatPage({ users, serverMsgs }) {
       {/* right  */}
       <div className="right w-[70vw] h-screen flex flex-col">
         <div className="text-center text-2xl m-2">
-          {currentGroup ? currentGroup : chatUser.username}
+          {currentGroup
+            ? currentGroup
+            : chatUser.username
+            ? chatUser.username
+            : "Select Chat"}
         </div>
         <hr />
         <div className="grow p-2">

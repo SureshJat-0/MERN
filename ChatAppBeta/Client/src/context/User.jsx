@@ -8,7 +8,7 @@ export default function UserProvider({ children }) {
     socketId: "",
   });
   const [chatUser, setChatUser] = useState(currentUser);
-  const [currentGroup, setCurrentGroup] = useState("general");
+  const [currentGroup, setCurrentGroup] = useState(null);
   return (
     <UserContext.Provider
       value={{
