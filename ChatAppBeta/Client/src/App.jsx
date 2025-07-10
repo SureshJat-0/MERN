@@ -25,12 +25,7 @@ function App() {
         <Route path="/" element={<Login />} />
         <Route
           path="/chat"
-          element={
-            <ChatPage
-              users={users}
-              serverMsgs={serverMsgs}
-            />
-          }
+          element={<ChatPage users={users} serverMsgs={serverMsgs} />}
         />
       </Routes>
     </BrowserRouter>

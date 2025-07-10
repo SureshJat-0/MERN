@@ -8,9 +8,17 @@ export default function UserProvider({ children }) {
     socketId: "",
   });
   const [chatUser, setChatUser] = useState(currentUser);
+  const [currentGroup, setCurrentGroup] = useState("general");
   return (
     <UserContext.Provider
-      value={{ currentUser, chatUser, setCurrentUser, setChatUser }}
+      value={{
+        currentUser,
+        chatUser,
+        setCurrentUser,
+        setChatUser,
+        currentGroup,
+        setCurrentGroup,
+      }}
     >
       {children}
     </UserContext.Provider>
