@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import Login from "./Components/login";
+import Login from "./Components/Login/Login";
+import Signup from "./Components/Login/Signup";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ChatPage from "./Pages/ChatPage";
 import { useSocket } from "./context/socket";
@@ -29,6 +30,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
         <Route
           path="/chat"
           element={

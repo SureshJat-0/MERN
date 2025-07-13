@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSocket } from "../context/socket";
 import { useUser } from "../context/User";
 import UserMap from "../Components/ChatPage/UserMap";
@@ -9,14 +9,27 @@ export default function ChatPage({ users, serverMsgs, groups }) {
   const [message, setMessage] = useState("");
   const { currentUser, chatUser, setChatUser, currentGroup, setCurrentGroup } =
     useUser();
+  const [isTyping, setIsTyping] = useState(false);
+  const [isTimeout, setIsTimeout] = useState()
+
+  useEffect(() => {
+    socket.on('user-typing', (typingData) => {
+      setIsTyping(true);
+    });
+    socket.on('user-stop-typing', () => {
+      setIsTyping(false);
+    });
+  }, [socket]);
 
   const handleMessageSend = (e) => {
     e.preventDefault();
     const messageData = {
       message,
       senderUsername: currentUser.username,
-      groupChat: currentGroup,
     };
+    if(currentGroup) {
+      messageData.currentGroup = currentGroup;
+    }
     if (chatUser) {
       messageData.receiverUsername = chatUser.username;
     }
@@ -36,6 +49,30 @@ export default function ChatPage({ users, serverMsgs, groups }) {
     setCurrentGroup(groupName);
     socket.emit("groupJoin", groupName);
   };
+  const handleMessageInputChange = (e) => {
+    const text = e.target.value;
+    setMessage(text);
+    // handling typing indicator
+    const typingData = {
+      currentUser,
+    }
+    if(chatUser) typingData.chatUser = chatUser;
+    if(currentGroup) typingData.currentGroup = currentGroup;
+
+    if(text) {
+      socket.emit('typing', typingData);
+      // clearing previous timeout if user is still typing
+      if(isTimeout) clearTimeout(isTimeout);
+      // creating new timeout
+      // This way only last time out will work
+      const timeout = setTimeout(() => {
+        socket.emit('stop-typing', typingData);
+      }, 2500);
+      setIsTimeout(timeout);
+    } else {
+      socket.emit('stop-typing', typingData);
+    }
+  }
 
   return (
     <div className="flex flex-row w-screen">
@@ -85,13 +122,18 @@ export default function ChatPage({ users, serverMsgs, groups }) {
               <MessageMap value={{ msg, index }} key={index} />
             ))}
           </ul>
+          {/* typing indicator */}
+          <ul>
+            {isTyping && (<span>{chatUser.username} is typing...</span>)}
+          </ul>
         </div>
         <hr />
+        {/* message input */}
         <div className="w-full">
           <form onSubmit={handleMessageSend}>
             <input
               value={message}
-              onChange={(e) => setMessage(e.target.value)}
+              onChange={handleMessageInputChange}
               type="text"
               placeholder="Message..."
               className="text-lg m-2 w-[90%] p-2 border rounded"
