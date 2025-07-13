@@ -7,9 +7,10 @@ const socketFunction = require("./socket");
 const passport = require("passport");
 const User = require("./Models/User");
 const { default: mongoose } = require("mongoose");
-const UserRouter = require("./Routes/User");
 const LocalStretagy = require("passport-local").Strategy;
 const session = require('express-session');
+const AuthRouter = require("./Routes/Auth");
+const UserRouter = require("./Routes/User");
 
 app.use(
   cors({
@@ -46,6 +47,7 @@ mongoose
 // socket
 socketFunction(server);
 
-app.use('/api/auth', UserRouter);
+app.use('/api/auth', AuthRouter);
+app.use('/api/user', UserRouter);
 
 server.listen(3000, () => console.log("server started!"));

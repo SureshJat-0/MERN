@@ -3,23 +3,43 @@ import { useSocket } from "../context/socket";
 import { useUser } from "../context/User";
 import UserMap from "../Components/ChatPage/UserMap";
 import MessageMap from "../Components/ChatPage/MessageMap";
+import axios from "axios";
 
-export default function ChatPage({ users, serverMsgs, groups }) {
+export default function ChatPage({ serverMsgs, groups }) {
   const socket = useSocket();
   const [message, setMessage] = useState("");
-  const { currentUser, chatUser, setChatUser, currentGroup, setCurrentGroup } =
-    useUser();
+  const {
+    users,
+    setUsers,
+    currentUser,
+    setCurrentUser,
+    chatUser,
+    setChatUser,
+    currentGroup,
+    setCurrentGroup,
+  } = useUser();
   const [isTyping, setIsTyping] = useState(false);
-  const [isTimeout, setIsTimeout] = useState()
+  const [isTimeout, setIsTimeout] = useState();
 
+  // whenever user refresh chat page
+  async function setUsersAndLoginUser() {
+    const res = await axios.get("/api/user/profile");
+    setCurrentUser(res.data.user);
+    const usersRes = await axios.get('/api/user/users');
+    setUsers(usersRes.data);
+  }
   useEffect(() => {
-    socket.on('user-typing', (typingData) => {
-      setIsTyping(true);
-    });
-    socket.on('user-stop-typing', () => {
-      setIsTyping(false);
-    });
-  }, [socket]);
+    setUsersAndLoginUser();
+  }, []);
+
+  // useEffect(() => {
+  //   socket.on("user-typing", () => {
+  //     setIsTyping(true);
+  //   });
+  //   socket.on("user-stop-typing", () => {
+  //     setIsTyping(false);
+  //   });
+  // }, [socket]);
 
   const handleMessageSend = (e) => {
     e.preventDefault();
@@ -27,7 +47,7 @@ export default function ChatPage({ users, serverMsgs, groups }) {
       message,
       senderUsername: currentUser.username,
     };
-    if(currentGroup) {
+    if (currentGroup) {
       messageData.currentGroup = currentGroup;
     }
     if (chatUser) {
@@ -53,26 +73,26 @@ export default function ChatPage({ users, serverMsgs, groups }) {
     const text = e.target.value;
     setMessage(text);
     // handling typing indicator
-    const typingData = {
-      currentUser,
-    }
-    if(chatUser) typingData.chatUser = chatUser;
-    if(currentGroup) typingData.currentGroup = currentGroup;
+    // const typingData = {
+    //   currentUser,
+    // };
+    // if (chatUser) typingData.chatUser = chatUser;
+    // if (currentGroup) typingData.currentGroup = currentGroup;
 
-    if(text) {
-      socket.emit('typing', typingData);
-      // clearing previous timeout if user is still typing
-      if(isTimeout) clearTimeout(isTimeout);
-      // creating new timeout
-      // This way only last time out will work
-      const timeout = setTimeout(() => {
-        socket.emit('stop-typing', typingData);
-      }, 2500);
-      setIsTimeout(timeout);
-    } else {
-      socket.emit('stop-typing', typingData);
-    }
-  }
+    // if (text) {
+    //   socket.emit("typing", typingData);
+    //   // clearing previous timeout if user is still typing
+    //   if (isTimeout) clearTimeout(isTimeout);
+    //   // creating new timeout
+    //   // This way only last time out will work
+    //   const timeout = setTimeout(() => {
+    //     socket.emit("stop-typing", typingData);
+    //   }, 2500);
+    //   setIsTimeout(timeout);
+    // } else {
+    //   socket.emit("stop-typing", typingData);
+    // }
+  };
 
   return (
     <div className="flex flex-row w-screen">
@@ -95,12 +115,13 @@ export default function ChatPage({ users, serverMsgs, groups }) {
         </div>
         <hr />
         <div className="my-6">
-          <h1 className="text-center m-2 text-xl">Available Users</h1>
+          <h1 className="text-center m-2 text-xl">All Users</h1>
           <ul>
-            {users.map((user, index) => (
+            {users?.map((user) => (
               <UserMap
-                value={{ user, index, handleSelectUserForChat }}
-                key={index}
+                user={user}
+                fun={handleSelectUserForChat}
+                key={user._id}
               />
             ))}
           </ul>
@@ -111,7 +132,7 @@ export default function ChatPage({ users, serverMsgs, groups }) {
         <div className="text-center text-2xl m-2">
           {currentGroup
             ? currentGroup
-            : chatUser.username
+            : chatUser?.username
             ? chatUser.username
             : "Select Chat"}
         </div>
@@ -123,9 +144,7 @@ export default function ChatPage({ users, serverMsgs, groups }) {
             ))}
           </ul>
           {/* typing indicator */}
-          <ul>
-            {isTyping && (<span>{chatUser.username} is typing...</span>)}
-          </ul>
+          <ul>{isTyping && <span>{chatUser.username} is typing...</span>}</ul>
         </div>
         <hr />
         {/* message input */}

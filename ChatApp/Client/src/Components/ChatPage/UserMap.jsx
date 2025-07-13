@@ -1,14 +1,13 @@
 import { useUser } from "../../context/User";
 
-export default function UserMap(props) {
-  const { user, index, handleSelectUserForChat } = props.value;
+export default function UserMap({user, fun}) {
   const { currentUser } = useUser();
   return (
     <li
       onClick={() => {
-        handleSelectUserForChat(user);
+        fun(user);
       }}
-      key={index}
+      key={user._id}
       className="py-2 px-4 cursor-pointer border m-2"
     >
       <span>

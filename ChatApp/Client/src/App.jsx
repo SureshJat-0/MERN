@@ -4,24 +4,22 @@ import Signup from "./Components/Login/Signup";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ChatPage from "./Pages/ChatPage";
 import { useSocket } from "./context/socket";
+import axios, { all } from "axios";
+import { useUser } from "./context/User";
 
 function App() {
   const socket = useSocket();
-  const [users, setUsers] = useState([]);
   const [groups, setGroups] = useState(["General", "Random"]);
   const [serverMsgs, setServerMsgs] = useState([]);
+  const {users, setUsers, currentUser, setCurrentUser} = useUser();
 
-  const handleNewUserJoin = (usersData) => {
-    setUsers(usersData);
-  };
   const handleGetServerMsgs = (serverMsgsData) => {
     setServerMsgs(serverMsgsData);
   };
+
   useEffect(() => {
-    socket.on("newUserJoin", handleNewUserJoin);
     socket.on("getServerMsgs", handleGetServerMsgs);
     return () => {
-      socket.off("newUserJoin", handleNewUserJoin);
       socket.off("getServerMsgs", handleGetServerMsgs);
     };
   }, [socket]);
@@ -34,7 +32,7 @@ function App() {
         <Route
           path="/chat"
           element={
-            <ChatPage users={users} serverMsgs={serverMsgs} groups={groups} />
+            <ChatPage serverMsgs={serverMsgs} groups={groups} />
           }
         />
       </Routes>

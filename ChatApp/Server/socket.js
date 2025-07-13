@@ -1,6 +1,5 @@
 const { Server } = require("socket.io");
 
-let users = [];
 let messages = {};
 let groupMessages = {};
 
@@ -19,16 +18,6 @@ function socketFunction(server) {
   });
 
   io.on("connect", (socket) => {
-    // joining the server when login
-    socket.on("joinServer", (userData) => {
-      console.log("server joined", userData.username);
-      userData.socketId = socket.id;
-      if (!users.some((user) => user.username === userData.username)) {
-        users.push(userData); // preventing duplicate user login
-      }
-      io.emit("newUserJoin", users); // sending all users to frontend
-    });
-
     socket.on("userSelected", (data) => {
       if (socket.currentRoom) socket.leave(socket.currentRoom);
       const keyChar = getKey(data.currentUser.username, data.chatUser.username);
@@ -78,17 +67,17 @@ function socketFunction(server) {
     });
 
     // typing
-    socket.on("typing", (typingData) => {
-      io.to(typingData.chatUser.socketId).emit("user-typing", typingData);
-    });
-    socket.on("stop-typing", (typingData) => {
-      io.to(typingData.chatUser.socketId).emit("user-stop-typing", typingData);
-    });
+    // socket.on("typing", (typingData) => {
+    //   io.to(typingData.chatUser.socketId).emit("user-typing", typingData);
+    // });
+    // socket.on("stop-typing", (typingData) => {
+    //   io.to(typingData.chatUser.socketId).emit("user-stop-typing", typingData);
+    // });
 
     // filtering disconnected users
     socket.on("disconnect", () => {
-      users = users.filter((user) => user.socketId != socket.id);
-      io.emit("newUserJoin", users);
+      // users = users.filter((user) => user.socketId != socket.id);
+      // io.emit("newUserJoin", users);
     });
   });
 }

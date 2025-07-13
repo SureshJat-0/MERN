@@ -3,21 +3,21 @@ import { createContext, useContext, useState } from "react";
 const UserContext = createContext();
 
 export default function UserProvider({ children }) {
-  const [currentUser, setCurrentUser] = useState({
-    username: "",
-    socketId: "",
-  });
-  const [chatUser, setChatUser] = useState(currentUser);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [chatUser, setChatUser] = useState(null);
   const [currentGroup, setCurrentGroup] = useState(null);
+  const [users, setUsers] = useState(null);
   return (
     <UserContext.Provider
       value={{
         currentUser,
         chatUser,
+        currentGroup,
+        users,
         setCurrentUser,
         setChatUser,
-        currentGroup,
         setCurrentGroup,
+        setUsers,
       }}
     >
       {children}
