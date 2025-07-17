@@ -3,7 +3,7 @@ export default function MessagesMap(props) {
   return (
     <>
       <li key={index}>
-        <span>{msg.sender}</span> : <span>{msg.content}</span>
+        <span>{msg.sender.username}</span> : <span>{msg.content}</span>
       </li>
     </>
   );

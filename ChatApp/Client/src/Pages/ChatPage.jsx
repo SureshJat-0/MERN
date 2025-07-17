@@ -5,7 +5,7 @@ import UserMap from "../Components/ChatPage/UserMap";
 import MessageMap from "../Components/ChatPage/MessageMap";
 import axios from "axios";
 
-export default function ChatPage({ serverMsgs, groups }) {
+export default function ChatPage() {
   const socket = useSocket();
   const [message, setMessage] = useState("");
   const {
@@ -18,14 +18,17 @@ export default function ChatPage({ serverMsgs, groups }) {
     currentGroup,
     setCurrentGroup,
   } = useUser();
+  const [groups, setGroups] = useState(["General", "Random"]);
+  const [dbMessages, setDbMessages] = useState([]);
+
   const [isTyping, setIsTyping] = useState(false);
   const [isTimeout, setIsTimeout] = useState();
 
   // whenever user refresh chat page
   async function setUsersAndLoginUser() {
-    const res = await axios.get("/api/user/profile");
-    setCurrentUser(res.data.user);
-    const usersRes = await axios.get('/api/user/users');
+    const loginUserRes = await axios.get("/api/user/profile");
+    setCurrentUser(loginUserRes.data.user);
+    const usersRes = await axios.get("/api/user/users");
     setUsers(usersRes.data);
   }
   useEffect(() => {
@@ -54,19 +57,59 @@ export default function ChatPage({ serverMsgs, groups }) {
       messageData.receiverUsername = chatUser.username;
     }
     socket.emit("message", messageData);
+    const MessageObj = {
+      message,
+      sender: currentUser,
+    };
+    if (chatUser) {
+      MessageObj.receiver = chatUser;
+    }
+    if (currentGroup) {
+      MessageObj.group = currentGroup;
+    }
+    axios
+      .post("/api/chat/message", MessageObj, { withCredentials: true })
+      .then((res) => {
+        // console.log("Data: ", res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     setMessage("");
   };
-  const handleSelectUserForChat = (user) => {
+  const handleSelectUserForChat = async (user) => {
     setCurrentGroup(null);
     setChatUser(user);
+    // db part
+    const messagesRes = await axios.post(
+      "/api/chat/messages",
+      {
+        senderUsername: currentUser.username,
+        receiverUsername: user.username,
+      },
+      { withCredentials: true }
+    );
+    setDbMessages(messagesRes.data);
+    // socket part
     socket.emit("userSelected", {
       currentUser,
       chatUser: user,
     });
   };
-  const handleGroupClick = (e) => {
+  const handleGroupClick = async (e) => {
+    setChatUser(null);
     const groupName = e.currentTarget.dataset.name;
     setCurrentGroup(groupName);
+    // getting messages from db
+    const messagesRes = await axios.post(
+      "/api/chat/messages",
+      {
+        senderUsername: currentUser.username,
+        receiverUsername: groupName,
+      },
+      { withCredentials: true }
+    );
+    setDbMessages(messagesRes.data);
     socket.emit("groupJoin", groupName);
   };
   const handleMessageInputChange = (e) => {
@@ -139,7 +182,7 @@ export default function ChatPage({ serverMsgs, groups }) {
         <hr />
         <div className="grow p-2">
           <ul>
-            {serverMsgs.map((msg, index) => (
+            {dbMessages.map((msg, index) => (
               <MessageMap value={{ msg, index }} key={index} />
             ))}
           </ul>
