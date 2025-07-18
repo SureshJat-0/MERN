@@ -45,7 +45,7 @@ mongoose
   .then(() => {
     console.log("MongoDb connected!");
   })
-  .catch((err) => console.log("Mongo err", err));
+  .catch((err) => console.log("Mongo Error!"));
 
 // socket
 socketFunction(server);

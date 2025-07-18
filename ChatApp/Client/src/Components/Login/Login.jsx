@@ -51,7 +51,7 @@ export default function Login() {
         <input
           value={passwordInput}
           onChange={(e) => setPasseordInput(e.target.value)}
-          type="text"
+          type="password"
           placeholder="Password..."
         />
         <br />

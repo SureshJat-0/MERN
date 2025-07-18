@@ -7,37 +7,41 @@ function getKey(userA, userB) {
 
 const handleMessagePost = async (req, res) => {
   const { message, sender } = req.body;
-  const MessageObj = new Message({
+  const messageObj = new Message({
     content: message,
     sender: sender._id,
   });
   if (req.body.receiver) {
-    MessageObj.receiver = req.body.receiver._id;
+    messageObj.receiver = req.body.receiver._id;
   }
   if (req.body.group) {
-    MessageObj.group = req.body.group;
+    messageObj.group = req.body.group;
   }
-  // saving the message
-  const messageRes = await MessageObj.save();
+  // saving the message on Message Db
+  const messageRes = await messageObj.save();
   await messageRes.populate([
     { path: "sender", select: "username" },
     { path: "receiver", select: "username" },
   ]);
   // getting chat key
-  const chatId = getKey(
-    messageRes.sender.username,
-    messageRes.receiver?.username || MessageObj?.group
-  );
-  console.log(messageRes);
-  console.log(chatId);
-  // updating chat
+  let chatId;
+  if (messageRes.receiver) {
+    // private chat
+    chatId = getKey(messageRes.sender.username, messageRes.receiver.username);
+  } else {
+    chatId = messageRes.group; // group chat
+  }
+  // updating chat on Chat Db
+  const participants = [messageRes.sender._id, messageRes.receiver?._id].filter(
+    Boolean
+  ); // to not add null when receiver is not exist
   const chat = await Chat.findOneAndUpdate(
     { chatId },
     {
       $setOnInsert: {
         // if chatId not found it will create chatId and participants
         chatId,
-        participants: [messageRes.sender._id, messageRes.receiver?._id],
+        participants,
       },
       $push: {
         messages: messageRes._id,
@@ -45,14 +49,21 @@ const handleMessagePost = async (req, res) => {
     },
     { upsert: true, new: true }
   );
-  res.json(messageRes);
+  res.json(chat);
 };
 
 const handleGetAllMessages = async (req, res) => {
-  const { senderUsername, receiverUsername } = req.body;
-  const keyChat = getKey(senderUsername, receiverUsername);
+  const { senderUsername, receiverUsername, groupName } = req.body;
+  let chatKey;
+  // for group channel
+  if (!receiverUsername) {
+    chatKey = groupName;
+  } else {
+    // private chat
+    chatKey = getKey(senderUsername, receiverUsername);
+  }
   const userMessages = await Chat.find(
-    { chatId: keyChat },
+    { chatId: chatKey },
     { messages: 1, _id: 0 }
   ).populate([
     {

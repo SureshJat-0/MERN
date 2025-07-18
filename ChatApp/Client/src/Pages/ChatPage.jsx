@@ -19,7 +19,10 @@ export default function ChatPage() {
     setCurrentGroup,
   } = useUser();
   const [groups, setGroups] = useState(["General", "Random"]);
+  // messages from database
   const [dbMessages, setDbMessages] = useState([]);
+  // messages from socket
+  const [socketMessages, setSocketMessages] = useState([]);
 
   const [isTyping, setIsTyping] = useState(false);
   const [isTimeout, setIsTimeout] = useState();
@@ -44,73 +47,70 @@ export default function ChatPage() {
   //   });
   // }, [socket]);
 
+
+  // socket messages
+  useEffect(() => {
+    socket.on('chat', (messageData) => {
+      setSocketMessages((prevVal) => [...prevVal, messageData]);
+    });
+  }, [socket]);
+
   const handleMessageSend = (e) => {
     e.preventDefault();
-    const messageData = {
-      message,
-      senderUsername: currentUser.username,
-    };
-    if (currentGroup) {
-      messageData.currentGroup = currentGroup;
-    }
-    if (chatUser) {
-      messageData.receiverUsername = chatUser.username;
-    }
-    socket.emit("message", messageData);
-    const MessageObj = {
+    const messageObj = {
       message,
       sender: currentUser,
     };
     if (chatUser) {
-      MessageObj.receiver = chatUser;
+      messageObj.receiver = chatUser;
     }
     if (currentGroup) {
-      MessageObj.group = currentGroup;
+      messageObj.group = currentGroup;
     }
+    // to store on database
     axios
-      .post("/api/chat/message", MessageObj, { withCredentials: true })
-      .then((res) => {
-        // console.log("Data: ", res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+      .post("/api/chat/message", messageObj, { withCredentials: true })
+      .then((res) => {})
+      .catch((err) => console.log(err));
+    // send via socket
+    socket.emit('message', messageObj)
     setMessage("");
   };
+
+  async function setAllMessagesFromDb(current) {
+    // current could be chatUser or group
+    let messageObj = {
+      senderUsername: currentUser.username,
+    };
+    if (current?.username) {
+      messageObj.receiverUsername = current.username;
+    } else {
+      messageObj.groupName = current;
+    }
+    const messagesRes = await axios.post("/api/chat/messages", messageObj, {
+      withCredentials: true,
+    });
+    setDbMessages(messagesRes.data);
+  }
+
   const handleSelectUserForChat = async (user) => {
+    setSocketMessages([]);
     setCurrentGroup(null);
     setChatUser(user);
-    // db part
-    const messagesRes = await axios.post(
-      "/api/chat/messages",
-      {
-        senderUsername: currentUser.username,
-        receiverUsername: user.username,
-      },
-      { withCredentials: true }
-    );
-    setDbMessages(messagesRes.data);
-    // socket part
+    setAllMessagesFromDb(user); // here user is chatUser
+    // join the room to chat
     socket.emit("userSelected", {
       currentUser,
       chatUser: user,
     });
   };
-  const handleGroupClick = async (e) => {
+  const handleSelectGroupForChat = async (e) => {
+    setSocketMessages([]);
     setChatUser(null);
     const groupName = e.currentTarget.dataset.name;
     setCurrentGroup(groupName);
-    // getting messages from db
-    const messagesRes = await axios.post(
-      "/api/chat/messages",
-      {
-        senderUsername: currentUser.username,
-        receiverUsername: groupName,
-      },
-      { withCredentials: true }
-    );
-    setDbMessages(messagesRes.data);
-    socket.emit("groupJoin", groupName);
+    setAllMessagesFromDb(groupName);
+    socket.emit("groupJoin", groupName); // here username is group name
   };
   const handleMessageInputChange = (e) => {
     const text = e.target.value;
@@ -142,12 +142,12 @@ export default function ChatPage() {
       {/* left  */}
       <div className="left w-[30vw] h-screen border-r">
         <div className="m-2 my-6">
-          <h1 className="text-center m-2 text-xl">Groups</h1>
+          <h1 className="text-center m-2 text-xl">Public Channels</h1>
           <ul>
             {groups.map((group, index) => (
               <li
                 key={index}
-                onClick={handleGroupClick}
+                onClick={handleSelectGroupForChat}
                 data-name={group}
                 className="py-2 px-4 cursor-pointer border m-2"
               >
@@ -181,10 +181,19 @@ export default function ChatPage() {
         </div>
         <hr />
         <div className="grow p-2">
+          {/* messages from data base  */}
           <ul>
             {dbMessages.map((msg, index) => (
               <MessageMap value={{ msg, index }} key={index} />
             ))}
+          </ul>
+          {/* messages from socket  */}
+          <ul>
+            {
+              socketMessages.map((message, index) => (
+                <li key={index}><span>{message.sender.username}</span> : <span>{message.message}</span></li>
+              ))
+            }
           </ul>
           {/* typing indicator */}
           <ul>{isTyping && <span>{chatUser.username} is typing...</span>}</ul>
