@@ -7,6 +7,7 @@ import GroupsChatPanel from "../Components/ChatPage/GroupsChatPanel";
 import ChatHeader from "../Components/ChatPage/ChatHeader";
 import ChatMap from "../Components/ChatPage/ChatMap";
 import ChatInput from "../Components/ChatPage/ChatInput";
+import Navbar from "../Components/Navbar/Navbar";
 
 export default function ChatPage() {
   const socket = useSocket();
@@ -51,16 +52,20 @@ export default function ChatPage() {
   // }, [socket]);
 
   // socket messages
-  useEffect(() => {
-    socket.on("chat", (messageData) => {
+  const handlemessageData = (messageData) => {
       setSocketMessages((prevVal) => [...prevVal, messageData]);
-    });
+    }
+  useEffect(() => {
+    socket.on("chat", handlemessageData);
+    return () => {
+      socket.off("chat", handlemessageData)
+    }
   }, [socket]);
 
   const handleMessageSend = (e) => {
     e.preventDefault();
     setMessage(message.trim());
-    if (!message) return console.log("Message require!");
+    if (!message) return alert("Message require!");
     const messageObj = {
       message,
       sender: currentUser,
@@ -120,9 +125,9 @@ export default function ChatPage() {
     setAllMessagesFromDb(groupName);
     socket.emit("groupJoin", groupName); // here username is group name
   };
-  const handleMessageInputChange = (e) => {
-    const text = e.target.value;
-    setMessage(text);
+  // const handleMessageInputChange = (e) => {
+  //   const text = e.target.value;
+  //   setMessage(text);
     // handling typing indicator
     // const typingData = {
     //   currentUser,
@@ -143,33 +148,28 @@ export default function ChatPage() {
     // } else {
     //   socket.emit("stop-typing", typingData);
     // }
-  };
+  // };
 
   return (
-    <div className="flex flex-row w-screen">
-      {/* Left panel (groups and private chat)  */}
-      <div className="left w-[30vw] h-screen border-r">
+    <div className="flex flex-row w-screen h-screen">
+      <Navbar />
+      <div className="left w-[30vw] h-screen border-r border-gray-300 felx flex-col">
         <GroupsChatPanel
           groups={groups}
           handleSelectGroupForChat={handleSelectGroupForChat}
         />
-        <hr />
         <UsersChatPanel
           users={users}
           handleSelectUserForChat={handleSelectUserForChat}
         />
       </div>
-      {/* Right panel (chat) */}
       <div className="right w-[70vw] h-screen flex flex-col">
         <ChatHeader currentGroup={currentGroup} chatUser={chatUser} />
-        <hr />
-        {/* map on all the messages  */}
         <ChatMap dbMessages={dbMessages} socketMessages={socketMessages} />
-        <hr />
         <ChatInput
           message={message}
           handleMessageSend={handleMessageSend}
-          handleMessageInputChange={handleMessageInputChange}
+          setMessage={setMessage}
         />
       </div>
     </div>

@@ -42,7 +42,7 @@ const handleMessagePost = async (req, res) => {
     });
   // store message in message and chat db
   const messageObj = new Message({
-    content: message,
+    message,
     sender: sender._id,
   });
   if (req.body.receiver) {
