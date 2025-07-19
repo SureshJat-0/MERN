@@ -1,7 +1,7 @@
 const passport = require("passport");
 const User = require("../Models/User");
 
-const handleSignup = async (req, res) => {
+const handleSignup = async (req, res, next) => {
   const { username, password } = req.body;
   if (!username || !password) {
     return res
@@ -13,7 +13,7 @@ const handleSignup = async (req, res) => {
   console.log(registeredUser);
   res.status(200).json({
     status: "success",
-    message: "User signup success!",
+    message: "User signup successfuly!",
     user: newUser,
   });
 };
@@ -39,7 +39,13 @@ const handleLogin = (req, res, next) => {
         return res
           .status(500)
           .json({ status: "Fail", message: "Internal server error!" });
-      res.status(200).json({ status: "Success", message: "Login successful!", user: req.user });
+      res
+        .status(200)
+        .json({
+          status: "Success",
+          message: "Login successful!",
+          user: req.user,
+        });
     });
   })(req, res, next);
 };

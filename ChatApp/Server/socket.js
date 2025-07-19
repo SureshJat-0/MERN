@@ -31,7 +31,7 @@ function socketFunction(server) {
 
     // messages
     socket.on("message", (messageData) => {
-        io.to(socket.currentRoom).emit('chat', messageData);
+      io.to(socket.currentRoom).emit("chat", messageData);
     });
 
     // typing

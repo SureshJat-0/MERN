@@ -1,3 +1,4 @@
+const { CustomError } = require("../Error");
 const Chat = require("../Models/Chat");
 const Message = require("../Models/Message");
 
@@ -6,7 +7,40 @@ function getKey(userA, userB) {
 }
 
 const handleMessagePost = async (req, res) => {
-  const { message, sender } = req.body;
+  const { message, sender, receiver, group } = req.body;
+  // All validations
+  if (!message)
+    // if message not found
+    return res
+      .status(400)
+      .json({ status: "fail", message: "Message required!" });
+  if (!sender)
+    // if user not found
+    return res
+      .status(400)
+      .json({ status: "fail", message: "sender is required!" });
+  if (!receiver && !group)
+    // atleast one not found (receiver or group)
+    return res
+      .status(400)
+      .json({ status: "fail", message: "Receiver or Group required!" });
+  if (typeof sender !== "object" || !sender._id || !sender.username)
+    // if sender object is not correct
+    return res.status(400).json({
+      status: "fail",
+      message: "sender must be an object with an _id and username properties!",
+    });
+  if (
+    // if receiver object is not correct
+    receiver &&
+    (typeof receiver !== "object" || !receiver._id || !receiver.username)
+  )
+    return res.status(400).json({
+      status: "fail",
+      message:
+        "Receiver must be an object with an _id and username properties!",
+    });
+  // store message in message and chat db
   const messageObj = new Message({
     content: message,
     sender: sender._id,
@@ -17,19 +51,18 @@ const handleMessagePost = async (req, res) => {
   if (req.body.group) {
     messageObj.group = req.body.group;
   }
-  // saving the message on Message Db
   const messageRes = await messageObj.save();
   await messageRes.populate([
-    { path: "sender", select: "username" },
-    { path: "receiver", select: "username" },
+    { path: "sender", select: "username -_id" },
+    { path: "receiver", select: "username -_id" },
   ]);
-  // getting chat key
-  let chatId;
+  let chatId; // getting chat key
   if (messageRes.receiver) {
     // private chat
     chatId = getKey(messageRes.sender.username, messageRes.receiver.username);
   } else {
-    chatId = messageRes.group; // group chat
+    // group chat
+    chatId = messageRes.group;
   }
   // updating chat on Chat Db
   const participants = [messageRes.sender._id, messageRes.receiver?._id].filter(
@@ -49,14 +82,24 @@ const handleMessagePost = async (req, res) => {
     },
     { upsert: true, new: true }
   );
-  res.json(chat);
+  res.json(messageRes);
 };
 
 const handleGetAllMessages = async (req, res) => {
   const { senderUsername, receiverUsername, groupName } = req.body;
+  // validations
+  if (
+    (!senderUsername && !receiverUsername && !groupName) || // if all fields are empty
+    (senderUsername && !receiverUsername && !groupName) || // if sender but not receiver and group
+    (receiverUsername && !senderUsername && !groupName) // if receiver but not sender and group
+  )
+    return res.status(400).json({
+      status: "fail",
+      message: "Incorrect fields are given!",
+    });
   let chatKey;
-  // for group channel
   if (!receiverUsername) {
+    // group channel
     chatKey = groupName;
   } else {
     // private chat

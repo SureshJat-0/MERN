@@ -12,6 +12,7 @@ const session = require("express-session");
 const AuthRouter = require("./Routes/Auth");
 const UserRouter = require("./Routes/User");
 const ChatRouter = require("./Routes/Chat");
+const { ErrorHandler } = require("./Error");
 
 app.use(
   cors({
@@ -53,5 +54,8 @@ socketFunction(server);
 app.use("/api/auth", AuthRouter);
 app.use("/api/user", UserRouter);
 app.use("/api/chat", ChatRouter);
+
+// error handler
+app.use(ErrorHandler);
 
 server.listen(3000, () => console.log("server started!"));

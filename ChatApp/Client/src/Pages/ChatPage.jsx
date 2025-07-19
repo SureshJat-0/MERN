@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
 import { useSocket } from "../context/socket";
 import { useUser } from "../context/User";
-import UserMap from "../Components/ChatPage/UserMap";
-import MessageMap from "../Components/ChatPage/MessageMap";
 import axios from "axios";
+import UsersChatPanel from "../Components/ChatPage/UsersChatPanel";
+import GroupsChatPanel from "../Components/ChatPage/GroupsChatPanel";
+import ChatHeader from "../Components/ChatPage/ChatHeader";
+import ChatMap from "../Components/ChatPage/ChatMap";
+import ChatInput from "../Components/ChatPage/ChatInput";
 
 export default function ChatPage() {
   const socket = useSocket();
@@ -47,16 +50,17 @@ export default function ChatPage() {
   //   });
   // }, [socket]);
 
-
   // socket messages
   useEffect(() => {
-    socket.on('chat', (messageData) => {
+    socket.on("chat", (messageData) => {
       setSocketMessages((prevVal) => [...prevVal, messageData]);
     });
   }, [socket]);
 
   const handleMessageSend = (e) => {
     e.preventDefault();
+    setMessage(message.trim());
+    if (!message) return console.log("Message require!");
     const messageObj = {
       message,
       sender: currentUser,
@@ -70,10 +74,10 @@ export default function ChatPage() {
     // to store on database
     axios
       .post("/api/chat/message", messageObj, { withCredentials: true })
-      .then((res) => {})
-      .catch((err) => console.log(err));
+      .then(() => console.log("Message send successfuly!"))
+      .catch((err) => console.log("Message send error!", err));
     // send via socket
-    socket.emit('message', messageObj)
+    socket.emit("message", messageObj);
     setMessage("");
   };
 
@@ -82,15 +86,19 @@ export default function ChatPage() {
     let messageObj = {
       senderUsername: currentUser.username,
     };
-    if (current?.username) {
+    if (current.username) {
       messageObj.receiverUsername = current.username;
     } else {
       messageObj.groupName = current;
     }
-    const messagesRes = await axios.post("/api/chat/messages", messageObj, {
-      withCredentials: true,
-    });
-    setDbMessages(messagesRes.data);
+    try {
+      const messagesRes = await axios.post("/api/chat/messages", messageObj, {
+        withCredentials: true,
+      });
+      setDbMessages(messagesRes.data);
+    } catch (err) {
+      console.log("Error in getting messages");
+    }
   }
 
   const handleSelectUserForChat = async (user) => {
@@ -139,84 +147,30 @@ export default function ChatPage() {
 
   return (
     <div className="flex flex-row w-screen">
-      {/* left  */}
+      {/* Left panel (groups and private chat)  */}
       <div className="left w-[30vw] h-screen border-r">
-        <div className="m-2 my-6">
-          <h1 className="text-center m-2 text-xl">Public Channels</h1>
-          <ul>
-            {groups.map((group, index) => (
-              <li
-                key={index}
-                onClick={handleSelectGroupForChat}
-                data-name={group}
-                className="py-2 px-4 cursor-pointer border m-2"
-              >
-                <span>{group}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
+        <GroupsChatPanel
+          groups={groups}
+          handleSelectGroupForChat={handleSelectGroupForChat}
+        />
         <hr />
-        <div className="my-6">
-          <h1 className="text-center m-2 text-xl">All Users</h1>
-          <ul>
-            {users?.map((user) => (
-              <UserMap
-                user={user}
-                fun={handleSelectUserForChat}
-                key={user._id}
-              />
-            ))}
-          </ul>
-        </div>
+        <UsersChatPanel
+          users={users}
+          handleSelectUserForChat={handleSelectUserForChat}
+        />
       </div>
-      {/* right  */}
+      {/* Right panel (chat) */}
       <div className="right w-[70vw] h-screen flex flex-col">
-        <div className="text-center text-2xl m-2">
-          {currentGroup
-            ? currentGroup
-            : chatUser?.username
-            ? chatUser.username
-            : "Select Chat"}
-        </div>
+        <ChatHeader currentGroup={currentGroup} chatUser={chatUser} />
         <hr />
-        <div className="grow p-2">
-          {/* messages from data base  */}
-          <ul>
-            {dbMessages.map((msg, index) => (
-              <MessageMap value={{ msg, index }} key={index} />
-            ))}
-          </ul>
-          {/* messages from socket  */}
-          <ul>
-            {
-              socketMessages.map((message, index) => (
-                <li key={index}><span>{message.sender.username}</span> : <span>{message.message}</span></li>
-              ))
-            }
-          </ul>
-          {/* typing indicator */}
-          <ul>{isTyping && <span>{chatUser.username} is typing...</span>}</ul>
-        </div>
+        {/* map on all the messages  */}
+        <ChatMap dbMessages={dbMessages} socketMessages={socketMessages} />
         <hr />
-        {/* message input */}
-        <div className="w-full">
-          <form onSubmit={handleMessageSend}>
-            <input
-              value={message}
-              onChange={handleMessageInputChange}
-              type="text"
-              placeholder="Message..."
-              className="text-lg m-2 w-[90%] p-2 border rounded"
-            />
-            <button
-              type="submit"
-              className="border p-2 m-1 cursor-pointer rounded"
-            >
-              send
-            </button>
-          </form>
-        </div>
+        <ChatInput
+          message={message}
+          handleMessageSend={handleMessageSend}
+          handleMessageInputChange={handleMessageInputChange}
+        />
       </div>
     </div>
   );
