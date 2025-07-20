@@ -1,4 +1,5 @@
-import { createContext, useContext, useState } from "react";
+import axios from "axios";
+import { createContext, useContext, useEffect, useState } from "react";
 
 const UserContext = createContext();
 
@@ -7,6 +8,15 @@ export default function UserProvider({ children }) {
   const [chatUser, setChatUser] = useState(null);
   const [currentGroup, setCurrentGroup] = useState(null);
   const [users, setUsers] = useState(null);
+
+  useEffect(() => {
+    axios.get('/api/auth/status', {withCredentials: true}).then((res) => {
+      setCurrentUser(res.data.user);
+    }).catch((err) => {
+      console.log("Error while getting auth");
+    })
+  }, []);
+
   return (
     <UserContext.Provider
       value={{

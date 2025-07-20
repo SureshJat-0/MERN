@@ -33,24 +33,47 @@ const handleLogin = (req, res, next) => {
     if (!user)
       return res
         .status(401)
-        .json({ status: "Fail", message: "Invalid Credentials" });
+        .json({
+          status: "Fail",
+          message: info?.message || "Invalid Credentials",
+        });
     req.logIn(user, (err) => {
       if (err)
         return res
           .status(500)
           .json({ status: "Fail", message: "Internal server error!" });
-      res
-        .status(200)
-        .json({
-          status: "Success",
-          message: "Login successful!",
-          user: req.user,
-        });
+      res.status(200).json({
+        status: "Success",
+        message: "Login successful!",
+        user,
+      });
     });
   })(req, res, next);
+};
+
+const handleLogout = (req, res) => {
+  req.logout((err) => {
+    if (err) {
+      return res.status(500).json({ status: "fail", message: "Logout fails" });
+    }
+    res.clearCookie("connect.sid");
+    res
+      .status(200)
+      .json({ status: "success", message: "User Logout successfuly!" });
+  });
+};
+
+const getAuthStatus = (req, res) => {
+  if (req.isAuthenticated()) {
+    return res.status(200).json({ isAuthenticated: true, user: req.user });
+  } else {
+    return res.status(200).json({ isAuthenticated: false, user: null });
+  }
 };
 
 module.exports = {
   handleSignup,
   handleLogin,
+  handleLogout,
+  getAuthStatus,
 };

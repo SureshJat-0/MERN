@@ -8,9 +8,12 @@ import ChatHeader from "../Components/ChatPage/ChatHeader";
 import ChatMap from "../Components/ChatPage/ChatMap";
 import ChatInput from "../Components/ChatPage/ChatInput";
 import Navbar from "../Components/Navbar/Navbar";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default function ChatPage() {
   const socket = useSocket();
+  const location = useLocation();
+  const navigate = useNavigate();
   const [message, setMessage] = useState("");
   const {
     users,
@@ -22,6 +25,7 @@ export default function ChatPage() {
     currentGroup,
     setCurrentGroup,
   } = useUser();
+
   const [groups, setGroups] = useState(["General", "Random"]);
   // messages from database
   const [dbMessages, setDbMessages] = useState([]);
