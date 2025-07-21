@@ -3,7 +3,7 @@ import MessageMap from "./MessageMap";
 
 export default function ChatMap({ dbMessages, socketMessages }) {
   // auto scroll on message
-    const bottomRef = useRef(null);
+  const bottomRef = useRef(null);
   useEffect(() => {
     // Scroll to the bottom every time messages change
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -20,7 +20,7 @@ export default function ChatMap({ dbMessages, socketMessages }) {
       {/* messages from socket  */}
       <ul>
         {socketMessages.map((message, index) => (
-          <MessageMap value={{ message, index}} key={index} />
+          <MessageMap value={{ message, index }} key={index} />
         ))}
       </ul>
       <div ref={bottomRef}></div>

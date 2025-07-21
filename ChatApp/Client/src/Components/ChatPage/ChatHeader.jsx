@@ -1,4 +1,6 @@
 export default function ChatHeader({ currentGroup, chatUser }) {
+  // function to get random number from string
+  // Math.random() re-randers component on every change
   function getAvatarNumber(str) {
     let sum = 0;
     for (let i = 0; i < str.length; i++) {
@@ -22,7 +24,9 @@ export default function ChatHeader({ currentGroup, chatUser }) {
   };
   return (
     <div className="text-start text-xl font-bold flex items-center py-2 px-4 border border-gray-300">
-      <div className="h-10 w-10 bg-yellow-200 rounded-full mx-2">{selectedUserAvatar()}</div>
+      <div className="h-10 w-10 bg-yellow-200 rounded-full mx-2">
+        {selectedUserAvatar()}
+      </div>
       {currentGroup
         ? currentGroup
         : chatUser?.username

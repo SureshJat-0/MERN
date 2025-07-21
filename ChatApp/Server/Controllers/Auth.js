@@ -31,12 +31,10 @@ const handleLogin = (req, res, next) => {
         .status(500)
         .json({ status: "Fail", message: "Internal server error!" });
     if (!user)
-      return res
-        .status(401)
-        .json({
-          status: "Fail",
-          message: info?.message || "Invalid Credentials",
-        });
+      return res.status(401).json({
+        status: "Fail",
+        message: info?.message || "Invalid Credentials",
+      });
     req.logIn(user, (err) => {
       if (err)
         return res
@@ -56,6 +54,12 @@ const handleLogout = (req, res) => {
     if (err) {
       return res.status(500).json({ status: "fail", message: "Logout fails" });
     }
+    req.session.destroy((err) => {
+      if (err)
+        return res
+          .status(500)
+          .json({ status: "fail", message: "Session destroy fails!" });
+    });
     res.clearCookie("connect.sid");
     res
       .status(200)

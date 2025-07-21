@@ -1,10 +1,6 @@
-import SendIcon from '@mui/icons-material/Send';
+import SendIcon from "@mui/icons-material/Send";
 
-export default function ChatInput({
-  message,
-  handleMessageSend,
-  setMessage,
-}) {
+export default function ChatInput({ message, handleMessageSend, setMessage }) {
   return (
     <form onSubmit={handleMessageSend} className="w-full flex flex-row">
       <input

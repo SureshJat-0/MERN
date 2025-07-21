@@ -5,11 +5,11 @@ import axios, { all } from "axios";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import Navbar from "../Navbar/Navbar";
+import SideImagePage from "./SideImagePage";
 
 export default function Login() {
   const { users, setUsers, currentUser, setCurrentUser } = useUser();
   const navigate = useNavigate();
-  const location = useLocation();
   const [loginInput, setLoginInput] = useState("");
   const [passwordInput, setPasswordInput] = useState("");
 
@@ -23,7 +23,7 @@ export default function Login() {
         { withCredentials: true }
       );
       // setting login user
-      const loginUserRes = await axios.get("/api/user/profile", {
+      const loginUserRes = await axios.get("/api/auth/status", {
         withCredentials: true,
       });
       setCurrentUser(loginUserRes.data.user);
@@ -35,7 +35,7 @@ export default function Login() {
       // UI update
       setLoginInput("");
       setPasswordInput("");
-      navigate("/chat");
+      navigate("/");
     } catch (err) {
       const errMsg = err?.response?.data?.message || "Login Error!";
       console.log(errMsg);
@@ -44,6 +44,7 @@ export default function Login() {
       return alert(errMsg);
     }
   };
+
   return (
     <div className="flex overflow-hidden">
       <Navbar />
@@ -82,30 +83,15 @@ export default function Login() {
               Login
             </button>
             <p>
-              Don't have an account? <Link to="/signup"> Signup </Link>
+              Don't have an account?{" "}
+              <Link to="/signup" className="text-indigo-800">
+                {" "}
+                Signup{" "}
+              </Link>
             </p>
           </Box>
         </div>
-        <div
-          style={{
-            backgroundImage:
-              "url('https://i.pinimg.com/1200x/b7/33/c4/b733c4edae153243ea5534f1b916b7ba.jpg')",
-          }}
-          className={`w-[48vw] h-full bg-cover bg-center rounded-tl-4xl rounded-bl-4xl`}
-        >
-          <div className="flex flex-col justify-center items-right text-2xl w-full h-full px-16 tracking-wider">
-            <h1 className="text-4xl font-bold text-white my-4 mb-4">
-              <span className="mb-1">Login your</span>
-              <br />
-              <span>account</span>
-            </h1>
-            <p className="text-2xl text-gray-200 font-semibold">
-              <span>Ready to chat, share, and connect?</span>
-              <br />
-              <span>Just log in and start talking!</span>
-            </p>
-          </div>
-        </div>
+        <SideImagePage pageName={"Login"} />
       </div>
     </div>
   );

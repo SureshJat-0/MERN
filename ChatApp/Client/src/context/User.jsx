@@ -10,11 +10,14 @@ export default function UserProvider({ children }) {
   const [users, setUsers] = useState(null);
 
   useEffect(() => {
-    axios.get('/api/auth/status', {withCredentials: true}).then((res) => {
-      setCurrentUser(res.data.user);
-    }).catch((err) => {
-      console.log("Error while getting auth");
-    })
+    axios
+      .get("/api/auth/status", { withCredentials: true })
+      .then((res) => {
+        setCurrentUser(res.data.user);
+      })
+      .catch((err) => {
+        console.log("Error while getting auth");
+      });
   }, []);
 
   return (

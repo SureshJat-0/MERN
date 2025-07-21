@@ -4,16 +4,11 @@ import { useUser } from "../context/User";
 import axios from "axios";
 import UsersChatPanel from "../Components/ChatPage/UsersChatPanel";
 import GroupsChatPanel from "../Components/ChatPage/GroupsChatPanel";
-import ChatHeader from "../Components/ChatPage/ChatHeader";
-import ChatMap from "../Components/ChatPage/ChatMap";
-import ChatInput from "../Components/ChatPage/ChatInput";
 import Navbar from "../Components/Navbar/Navbar";
-import { useLocation, useNavigate } from "react-router-dom";
+import ChatBox from "../Components/ChatPage/ChatBox";
 
 export default function ChatPage() {
   const socket = useSocket();
-  const location = useLocation();
-  const navigate = useNavigate();
   const [message, setMessage] = useState("");
   const {
     users,
@@ -32,38 +27,15 @@ export default function ChatPage() {
   // messages from socket
   const [socketMessages, setSocketMessages] = useState([]);
 
-  const [isTyping, setIsTyping] = useState(false);
-  const [isTimeout, setIsTimeout] = useState();
-
-  // whenever user refresh chat page
-  async function setUsersAndLoginUser() {
-    const loginUserRes = await axios.get("/api/user/profile");
-    setCurrentUser(loginUserRes.data.user);
-    const usersRes = await axios.get("/api/user/users");
-    setUsers(usersRes.data);
-  }
-  useEffect(() => {
-    setUsersAndLoginUser();
-  }, []);
-
-  // useEffect(() => {
-  //   socket.on("user-typing", () => {
-  //     setIsTyping(true);
-  //   });
-  //   socket.on("user-stop-typing", () => {
-  //     setIsTyping(false);
-  //   });
-  // }, [socket]);
-
   // socket messages
   const handlemessageData = (messageData) => {
-      setSocketMessages((prevVal) => [...prevVal, messageData]);
-    }
+    setSocketMessages((prevVal) => [...prevVal, messageData]);
+  };
   useEffect(() => {
     socket.on("chat", handlemessageData);
     return () => {
-      socket.off("chat", handlemessageData)
-    }
+      socket.off("chat", handlemessageData);
+    };
   }, [socket]);
 
   const handleMessageSend = (e) => {
@@ -114,7 +86,7 @@ export default function ChatPage() {
     setSocketMessages([]);
     setCurrentGroup(null);
     setChatUser(user);
-    setAllMessagesFromDb(user); // here user is chatUser
+    setAllMessagesFromDb(user);
     // join the room to chat
     socket.emit("userSelected", {
       currentUser,
@@ -129,35 +101,11 @@ export default function ChatPage() {
     setAllMessagesFromDb(groupName);
     socket.emit("groupJoin", groupName); // here username is group name
   };
-  // const handleMessageInputChange = (e) => {
-  //   const text = e.target.value;
-  //   setMessage(text);
-    // handling typing indicator
-    // const typingData = {
-    //   currentUser,
-    // };
-    // if (chatUser) typingData.chatUser = chatUser;
-    // if (currentGroup) typingData.currentGroup = currentGroup;
-
-    // if (text) {
-    //   socket.emit("typing", typingData);
-    //   // clearing previous timeout if user is still typing
-    //   if (isTimeout) clearTimeout(isTimeout);
-    //   // creating new timeout
-    //   // This way only last time out will work
-    //   const timeout = setTimeout(() => {
-    //     socket.emit("stop-typing", typingData);
-    //   }, 2500);
-    //   setIsTimeout(timeout);
-    // } else {
-    //   socket.emit("stop-typing", typingData);
-    // }
-  // };
 
   return (
-    <div className="flex flex-row w-screen h-screen">
+    <div className="flex flex-row w-screen h-screen overflow-hidden">
       <Navbar />
-      <div className="left w-[30vw] h-screen border-r border-gray-300 felx flex-col">
+      <div className="w-[30vw] max-h-screen border-r border-gray-300 felx flex-col">
         <GroupsChatPanel
           groups={groups}
           handleSelectGroupForChat={handleSelectGroupForChat}
@@ -167,13 +115,13 @@ export default function ChatPage() {
           handleSelectUserForChat={handleSelectUserForChat}
         />
       </div>
-      <div className="right w-[70vw] h-screen flex flex-col">
-        <ChatHeader currentGroup={currentGroup} chatUser={chatUser} />
-        <ChatMap dbMessages={dbMessages} socketMessages={socketMessages} />
-        <ChatInput
+      <div className="w-[70vw] h-screen flex flex-col">
+        <ChatBox
           message={message}
-          handleMessageSend={handleMessageSend}
           setMessage={setMessage}
+          handleMessageSend={handleMessageSend}
+          dbMessages={dbMessages}
+          socketMessages={socketMessages}
         />
       </div>
     </div>
