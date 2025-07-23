@@ -27,8 +27,10 @@ app.use(
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
+    secure: true, // for production : https
     cookie: {
-      secure: false,
+      secure: true, // for production : https
+      sameSite: 'none',
       maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
     },
   })
