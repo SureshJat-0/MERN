@@ -25,14 +25,20 @@ export default function Login() {
         { withCredentials: true }
       );
       // setting login user
-      const loginUserRes = await axios.get("/api/auth/status", {
-        withCredentials: true,
-      });
+      const loginUserRes = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/api/auth/status`,
+        {
+          withCredentials: true,
+        }
+      );
       setCurrentUser(loginUserRes.data.user);
       // setting users
-      const allUsersRes = await axios.get("/api/user/users", {
-        withCredentials: true,
-      });
+      const allUsersRes = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/api/user/users`,
+        {
+          withCredentials: true,
+        }
+      );
       setUsers(allUsersRes.data);
       // UI update
       setLoginInput("");
