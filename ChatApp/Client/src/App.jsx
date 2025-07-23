@@ -10,18 +10,24 @@ import { useEffect, useState } from "react";
 import Page404 from "./Components/Page404";
 
 function App() {
-  const { setCurrentUser, users, setUsers } = useUser();
+  const { setCurrentUser, setUsers } = useUser();
   const [loading, setLoading] = useState(true);
 
   async function getAuth() {
     try {
-      const authRes = await axios.get("/api/auth/status", {
-        withCredentials: true,
-      });
+      const authRes = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/api/auth/status`,
+        {
+          withCredentials: true,
+        }
+      );
       setCurrentUser(authRes.data.user); // setting current user
       if (authRes.data.user) {
         // get users only if authenticated
-        const usersRes = await axios.get("/api/user/users");
+        const usersRes = await axios.get(
+          `${import.meta.env.VITE_BACKEND_URL}/api/user/users`,
+          { withCredentials: true }
+        );
         setUsers(usersRes.data); // setting all users
       }
     } catch (err) {

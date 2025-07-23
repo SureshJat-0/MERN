@@ -20,7 +20,7 @@ export default function Login() {
     try {
       // login
       await axios.post(
-        "/api/auth/login",
+        `${import.meta.env.VITE_BACKEND_URL}/api/auth/login`,
         { username: loginInput, password: passwordInput },
         { withCredentials: true }
       );

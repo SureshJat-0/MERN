@@ -1,7 +1,7 @@
 import { io } from "socket.io-client";
 import { createContext, useContext } from "react";
 
-const socket = io("http://localhost:3000");
+const socket = io(`${import.meta.env.VITE_BACKEND_URL}`);
 const SocketContext = createContext();
 
 export default function SocketProvider({ children }) {

@@ -56,7 +56,11 @@ export default function ChatPage() {
     }
     // to store on database
     axios
-      .post("/api/chat/message", messageObj, { withCredentials: true })
+      .post(
+        `${import.meta.env.VITE_BACKEND_URL}/api/chat/message`,
+        messageObj,
+        { withCredentials: true }
+      )
       .then(() => console.log("Message send successfuly!"))
       .catch((err) => console.log("Message send error!", err));
     // send via socket
@@ -75,9 +79,13 @@ export default function ChatPage() {
       messageObj.groupName = current;
     }
     try {
-      const messagesRes = await axios.post("/api/chat/messages", messageObj, {
-        withCredentials: true,
-      });
+      const messagesRes = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/api/chat/messages`,
+        messageObj,
+        {
+          withCredentials: true,
+        }
+      );
       setDbMessages(messagesRes.data);
     } catch (err) {
       console.log("Error in getting messages");

@@ -11,7 +11,9 @@ export default function UserProvider({ children }) {
 
   useEffect(() => {
     axios
-      .get("/api/auth/status", { withCredentials: true })
+      .get(`${import.meta.env.VITE_BACKEND_URL}/api/auth/status`, {
+        withCredentials: true,
+      })
       .then((res) => {
         setCurrentUser(res.data.user);
       })

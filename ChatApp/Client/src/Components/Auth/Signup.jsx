@@ -18,7 +18,7 @@ export default function Login() {
     try {
       // signup
       await axios.post(
-        "/api/auth/signup",
+        `${import.meta.env.VITE_BACKEND_URL}/api/auth/signup`,
         { username: signupInput, password: passwordInput },
         { withCredentials: true }
       );

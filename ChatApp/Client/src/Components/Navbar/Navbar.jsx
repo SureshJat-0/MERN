@@ -20,7 +20,9 @@ export default function Navbar() {
 
   const handleLogout = async (popupState) => {
     try {
-      await axios.get("/api/auth/logout", { withCredentials: true });
+      await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/auth/logout`, {
+        withCredentials: true,
+      });
       popupState.close();
       navigate("/login");
       setCurrentUser(null);
@@ -54,7 +56,10 @@ export default function Navbar() {
         <PopupState variant="popover" popupId="setting-popup">
           {(popupState) => (
             <React.Fragment>
-              <SettingsIcon {...bindTrigger(popupState)} className="cursor-pointer"/>
+              <SettingsIcon
+                {...bindTrigger(popupState)}
+                className="cursor-pointer"
+              />
               <Menu {...bindMenu(popupState)}>
                 <Link to="/login">
                   <MenuItem onClick={popupState.close}>
