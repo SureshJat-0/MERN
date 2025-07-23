@@ -15,7 +15,9 @@ const AuthRouter = require("./Routes/Auth");
 const UserRouter = require("./Routes/User");
 const ChatRouter = require("./Routes/Chat");
 const { ErrorHandler } = require("./Error");
+const MongoStore = require("connect-mongo");
 
+app.set("trust proxy", 1); // trust first proxy — needed for HTTPS cookies to work
 app.use(
   cors({
     origin: process.env.CLIENT_URL,
@@ -28,9 +30,14 @@ app.use(
     resave: false,
     saveUninitialized: false,
     secure: true, // for production : https
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGO_URI,
+      ttl: 14 * 24 * 60 * 60, // 14 days
+    }),
     cookie: {
       secure: true, // for production : https
-      sameSite: 'none',
+      httpOnly: true,
+      sameSite: "none",
       maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
     },
   })
