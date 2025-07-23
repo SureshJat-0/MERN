@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const http = require("http");
 const PORT = process.env.PORT || 3000;
@@ -17,13 +18,13 @@ const { ErrorHandler } = require("./Error");
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: process.env.CLIENT_URL || "http://localhost:5173",
     credentials: true,
   })
 );
 app.use(
   session({
-    secret: "sureshSuperSecreteKey",
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: {
@@ -41,13 +42,11 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 mongoose
-  .connect(
-    "mongodb://127.0.0.1:27017/ChatApp?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.3.4"
-  )
+  .connect(process.env.MONGO_URL)
   .then(() => {
     console.log("MongoDb connected!");
   })
-  .catch((err) => console.log("Mongo Error!"));
+  .catch((err) => console.log("Mongo Error!", err));
 
 // socket
 socketFunction(server);
