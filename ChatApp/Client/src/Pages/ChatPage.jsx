@@ -6,10 +6,12 @@ import UsersChatPanel from "../Components/ChatPage/UsersChatPanel";
 import GroupsChatPanel from "../Components/ChatPage/GroupsChatPanel";
 import Navbar from "../Components/Navbar/Navbar";
 import ChatBox from "../Components/ChatPage/ChatBox";
+import { useSnackbar } from "../context/Snackbar";
 
 export default function ChatPage() {
   const socket = useSocket();
   const [message, setMessage] = useState("");
+  const { showSnackbar } = useSnackbar();
   const {
     users,
     setUsers,
@@ -41,7 +43,7 @@ export default function ChatPage() {
   const handleMessageSend = (e) => {
     e.preventDefault();
     setMessage(message.trim());
-    if (!message) return alert("Message require!");
+    if (!message) return showSnackbar("Message require!");
     const messageObj = {
       message,
       sender: currentUser,

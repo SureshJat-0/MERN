@@ -1,16 +1,31 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import MessageMap from "./MessageMap";
+import { useUser } from "../../context/User";
 
 export default function ChatMap({ dbMessages, socketMessages }) {
   // auto scroll on message
   const bottomRef = useRef(null);
+  const { chatUser, currentGroup } = useUser();
+  const [isMessagesLengthZero, setIsMessagesLengthZero] = useState(
+    dbMessages.length == 0 && socketMessages.length
+  ); // is any message for chat
+
   useEffect(() => {
     // Scroll to the bottom every time messages change
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    // check for messages
+    setIsMessagesLengthZero(
+      dbMessages.length == 0 && socketMessages.length == 0
+    );
   }, [socketMessages, dbMessages]);
 
   return (
     <div className="grow p-4 overflow-y-auto">
+      {isMessagesLengthZero && (
+        <div className="h-full font-bold text-2xl flex justify-center items-center">
+          Start Chat with {chatUser?.username || currentGroup + " chanel"}
+        </div>
+      )}
       {/* messages from data base  */}
       <ul className="flex flex-col">
         {dbMessages.map((message, index) => (
@@ -24,8 +39,6 @@ export default function ChatMap({ dbMessages, socketMessages }) {
         ))}
       </ul>
       <div ref={bottomRef}></div>
-      {/* typing indicator */}
-      {/* <ul>{isTyping && <span>{chatUser.username} is typing...</span>}</ul> */}
     </div>
   );
 }

@@ -5,9 +5,11 @@ import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import Navbar from "../Navbar/Navbar";
 import SideImagePage from "./SideImagePage";
+import { useSnackbar } from "../../context/Snackbar";
 
 export default function Login() {
   const navigate = useNavigate();
+  const { showSnackbar } = useSnackbar();
   const [signupInput, setSignupInput] = useState("");
   const [passwordInput, setPasswordInput] = useState("");
 
@@ -20,7 +22,7 @@ export default function Login() {
         { username: signupInput, password: passwordInput },
         { withCredentials: true }
       );
-      console.log("User signup Successfuly!");
+      console.log("User signup Successfully!");
       setSignupInput("");
       setPasswordInput("");
       navigate("/login");
@@ -29,7 +31,7 @@ export default function Login() {
       console.log(errorMsg);
       setSignupInput("");
       setPasswordInput("");
-      return alert(errorMsg);
+      return showSnackbar(errorMsg);
     }
   };
   return (

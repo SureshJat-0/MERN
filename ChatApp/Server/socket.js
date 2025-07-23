@@ -21,29 +21,16 @@ function socketFunction(server) {
       socket.join(keyChar);
       socket.currentRoom = keyChar;
     });
-
     // group messages
     socket.on("groupJoin", (groupName) => {
       if (socket.currentRoom) socket.leave(socket.currentRoom);
       socket.join(groupName);
       socket.currentRoom = groupName;
     });
-
     // messages
     socket.on("message", (messageData) => {
       io.to(socket.currentRoom).emit("chat", messageData);
     });
-
-    // typing
-    // socket.on("typing", (typingData) => {
-    //   io.to(typingData.chatUser.socketId).emit("user-typing", typingData);
-    // });
-    // socket.on("stop-typing", (typingData) => {
-    //   io.to(typingData.chatUser.socketId).emit("user-stop-typing", typingData);
-    // });
-
-    // filtering disconnected users
-    socket.on("disconnect", () => {});
   });
 }
 

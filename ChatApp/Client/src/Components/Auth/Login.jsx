@@ -6,12 +6,14 @@ import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import Navbar from "../Navbar/Navbar";
 import SideImagePage from "./SideImagePage";
+import { useSnackbar } from "../../context/Snackbar";
 
 export default function Login() {
-  const { users, setUsers, currentUser, setCurrentUser } = useUser();
+  const { setUsers, setCurrentUser } = useUser();
   const navigate = useNavigate();
   const [loginInput, setLoginInput] = useState("");
   const [passwordInput, setPasswordInput] = useState("");
+  const { showSnackbar } = useSnackbar();
 
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
@@ -41,7 +43,7 @@ export default function Login() {
       console.log(errMsg);
       setLoginInput("");
       setPasswordInput("");
-      return alert(errMsg);
+      return showSnackbar(errMsg);
     }
   };
 

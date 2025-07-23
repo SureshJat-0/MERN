@@ -12,9 +12,9 @@ export default function UsersChatPanel({ users, handleSelectUserForChat }) {
   }
   const { currentUser } = useUser();
   return (
-    <div className="mt-4 flex flex-col h-[60vh]">
+    <div className="mt-4 flex flex-col h-[65vh]">
       <h1 className="text-start my-2 mx-6 text-lg font-bold">All Users</h1>
-      <ul className="overflow-y-auto h-[80%]">
+      <ul className="overflow-y-auto h-[95%]">
         {users?.map((user) => (
           <li
             onClick={() => handleSelectUserForChat(user)}

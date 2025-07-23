@@ -7,9 +7,10 @@ import ProtactedRoute from "./Components/Auth/ProtactedRoute";
 import axios from "axios";
 import { useUser } from "./context/User";
 import { useEffect, useState } from "react";
+import Page404 from "./Components/Page404";
 
 function App() {
-  const { setCurrentUser, setUsers } = useUser();
+  const { setCurrentUser, users, setUsers } = useUser();
   const [loading, setLoading] = useState(true);
 
   async function getAuth() {
@@ -18,8 +19,11 @@ function App() {
         withCredentials: true,
       });
       setCurrentUser(authRes.data.user); // setting current user
-      const usersRes = await axios.get("/api/user/users");
-      setUsers(usersRes.data); // setting all users
+      if (authRes.data.user) {
+        // get users only if authenticated
+        const usersRes = await axios.get("/api/user/users");
+        setUsers(usersRes.data); // setting all users
+      }
     } catch (err) {
       console.log(err);
     } finally {
@@ -49,6 +53,7 @@ function App() {
         />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="*" element={<Page404 />} />
       </Routes>
     </BrowserRouter>
   );

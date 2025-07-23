@@ -5,8 +5,10 @@ const {
   handleGetAllMessages,
 } = require("../Controllers/Chat");
 const { asyncWrap } = require("../Error");
+const { isAuthenticated } = require("../Controllers/Auth");
 
-ChatRouter.route("/message").post(asyncWrap(handleMessagePost));
-ChatRouter.route("/messages").post(asyncWrap(handleGetAllMessages));
+
+ChatRouter.route("/message").post(isAuthenticated, asyncWrap(handleMessagePost));
+ChatRouter.route("/messages").post(isAuthenticated, asyncWrap(handleGetAllMessages));
 
 module.exports = ChatRouter;

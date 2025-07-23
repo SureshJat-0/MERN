@@ -10,22 +10,26 @@ import PopupState, { bindTrigger, bindMenu } from "material-ui-popup-state";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useUser } from "../../context/User";
-import MouseHoverPopover from "../Hover/MouseOverPopover";
+import MouseHoverPopover from "../MaterialComponent/MouseOverPopover";
+import { useSnackbar } from "../../context/Snackbar";
 
 export default function Navbar() {
   const navigate = useNavigate();
   const { setCurrentUser } = useUser();
+  const { showSnackbar } = useSnackbar();
+
   const handleLogout = async (popupState) => {
     try {
       await axios.get("/api/auth/logout", { withCredentials: true });
       popupState.close();
       navigate("/login");
       setCurrentUser(null);
-      console.log("User logout successfuly!");
-      return alert("User logout!");
+      console.log("User logout successfully!");
+      showSnackbar("User Logout successfully!");
+      return;
     } catch (err) {
       console.log("Logout Error!", err);
-      alert("Logout Error!");
+      showSnackbar("Logout Error!");
       navigate("/login");
       popupState.close();
     }

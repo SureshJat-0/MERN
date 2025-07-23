@@ -6,14 +6,14 @@ const handleSignup = async (req, res, next) => {
   if (!username || !password) {
     return res
       .status(400)
-      .json({ status: "Fail", message: "All fields are require!" });
+      .json({ status: "Fail", message: "All fields are required!" });
   }
   const newUser = new User({ username, password });
   const registeredUser = await User.register(newUser, password);
   console.log(registeredUser);
   res.status(200).json({
     status: "success",
-    message: "User signup successfuly!",
+    message: "User signup successfully!",
     user: newUser,
   });
 };
@@ -33,7 +33,7 @@ const handleLogin = (req, res, next) => {
     if (!user)
       return res.status(401).json({
         status: "Fail",
-        message: info?.message || "Invalid Credentials",
+        message: (info?.message) || "Invalid Credentials",
       });
     req.logIn(user, (err) => {
       if (err)
@@ -41,9 +41,12 @@ const handleLogin = (req, res, next) => {
           .status(500)
           .json({ status: "Fail", message: "Internal server error!" });
       res.status(200).json({
-        status: "Success",
-        message: "Login successful!",
-        user,
+        status: "success",
+        message: "Login successfully!",
+        user: {
+          _id: user._id,
+          username: user.username,
+        },
       });
     });
   })(req, res, next);
@@ -63,7 +66,7 @@ const handleLogout = (req, res) => {
     res.clearCookie("connect.sid");
     res
       .status(200)
-      .json({ status: "success", message: "User Logout successfuly!" });
+      .json({ status: "success", message: "User Logout successfully!" });
   });
 };
 
@@ -75,9 +78,18 @@ const getAuthStatus = (req, res) => {
   }
 };
 
+const isAuthenticated = (req, res, next) => {
+  if(req.isAuthenticated()) {
+    return next();
+  } else {
+    return res.status(401).json({stats: 'fail', message: 'Unauthorized!'});
+  }
+}
+
 module.exports = {
   handleSignup,
   handleLogin,
   handleLogout,
   getAuthStatus,
+  isAuthenticated,
 };
