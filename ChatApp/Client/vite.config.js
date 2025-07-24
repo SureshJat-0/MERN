@@ -6,8 +6,6 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
-    proxy: {
-      '/api': 'http://suresh-chat-backend.onrender.com/',
-    }
+    https: true,
   }
 })
