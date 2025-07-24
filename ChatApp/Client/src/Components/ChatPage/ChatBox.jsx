@@ -8,6 +8,7 @@ export default function ChatBox({
   dbMessages,
   socketMessages,
   message,
+  messageLoading,
   setMessage,
   handleMessageSend,
 }) {
@@ -16,7 +17,7 @@ export default function ChatBox({
     return (
       <>
         <ChatHeader currentGroup={currentGroup} chatUser={chatUser} />
-        <ChatMap dbMessages={dbMessages} socketMessages={socketMessages} />
+        <ChatMap dbMessages={dbMessages} socketMessages={socketMessages} messageLoading={messageLoading}/>
         <ChatInput
           message={message}
           handleMessageSend={handleMessageSend}

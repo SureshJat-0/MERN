@@ -1,12 +1,12 @@
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { useUser } from "./context/User";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import ProtactedRoute from "./Components/Auth/ProtactedRoute";
 import CircularProgress from "@mui/material/CircularProgress";
 import Login from "./Components/Auth/Login";
 import Signup from "./Components/Auth/Signup";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ChatPage from "./Pages/ChatPage";
-import ProtactedRoute from "./Components/Auth/ProtactedRoute";
-import axios from "axios";
-import { useUser } from "./context/User";
-import { useEffect, useState } from "react";
 import Page404 from "./Components/Page404";
 
 function App() {

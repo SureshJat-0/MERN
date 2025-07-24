@@ -12,6 +12,7 @@ export default function ChatPage() {
   const socket = useSocket();
   const [message, setMessage] = useState("");
   const { showSnackbar } = useSnackbar();
+  const [messageLoading, setMessageLoading] = useState(true); // messages loading until we retrive the data from DB
   const {
     users,
     setUsers,
@@ -89,10 +90,13 @@ export default function ChatPage() {
       setDbMessages(messagesRes.data);
     } catch (err) {
       console.log("Error in getting messages");
+    } finally {
+      setMessageLoading(false);
     }
   }
 
   const handleSelectUserForChat = async (user) => {
+    setMessageLoading(true); // start loading
     setSocketMessages([]);
     setCurrentGroup(null);
     setChatUser(user);
@@ -104,6 +108,7 @@ export default function ChatPage() {
     });
   };
   const handleSelectGroupForChat = async (e) => {
+    setMessageLoading(true);
     setSocketMessages([]);
     setChatUser(null);
     const groupName = e.currentTarget.dataset.name;
@@ -128,6 +133,7 @@ export default function ChatPage() {
       <div className="w-[70vw] h-screen flex flex-col">
         <ChatBox
           message={message}
+          messageLoading={messageLoading}
           setMessage={setMessage}
           handleMessageSend={handleMessageSend}
           dbMessages={dbMessages}
