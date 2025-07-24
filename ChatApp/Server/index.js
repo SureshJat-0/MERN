@@ -31,13 +31,13 @@ app.use(
     saveUninitialized: false,
     store: MongoStore.create({
       mongoUrl: process.env.MONGO_URL,
-      ttl: 14 * 24 * 60 * 60, // 14 days
+      ttl: 24 * 60 * 60, // 1 day
     }),
     cookie: {
       secure: true, // for production : https
       httpOnly: true,
-      sameSite: "none",
-      maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+      sameSite: "None",
+      maxAge: 1000 * 60 * 60 * 24, // 1 day
     },
   })
 );
