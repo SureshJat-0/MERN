@@ -16,8 +16,7 @@ const UserRouter = require("./Routes/User");
 const ChatRouter = require("./Routes/Chat");
 const { ErrorHandler } = require("./Error");
 const MongoStore = require("connect-mongo");
-const isProduction = process.env.NODE_ENV === 'production';
-
+const isProduction = process.env.NODE_ENV === "production";
 
 app.set("trust proxy", 1); // trust first proxy — needed for HTTPS cookies to work
 app.use(
@@ -38,7 +37,7 @@ app.use(
     cookie: {
       secure: isProduction, // true for production
       httpOnly: isProduction,
-      sameSite: isProduction ? 'none' : 'lax',
+      sameSite: isProduction ? "none" : "lax",
       maxAge: 1000 * 60 * 60 * 24, // 1 day
     },
   })
