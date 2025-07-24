@@ -35,16 +35,20 @@ export default function ChatPage() {
     setSocketMessages((prevVal) => [...prevVal, messageData]);
   };
   useEffect(() => {
+    if (chatUser || currentGroup) {
+      if (chatUser) setAllMessagesFromDb(chatUser);
+      else if (currentGroup) setAllMessagesFromDb(currentGroup);
+    }
     socket.on("chat", handlemessageData);
     return () => {
       socket.off("chat", handlemessageData);
     };
-  }, [socket]);
+  }, [socket, chatUser, currentGroup]);
 
   const handleMessageSend = (e) => {
     e.preventDefault();
     setMessage(message.trim());
-    if (!message) return showSnackbar("Message require!");
+    if (!message) return showSnackbar("Message required!");
     const messageObj = {
       message,
       sender: currentUser,
@@ -97,6 +101,7 @@ export default function ChatPage() {
 
   const handleSelectUserForChat = async (user) => {
     setMessageLoading(true); // start loading
+    setDbMessages([]);
     setSocketMessages([]);
     setCurrentGroup(null);
     setChatUser(user);
@@ -109,12 +114,13 @@ export default function ChatPage() {
   };
   const handleSelectGroupForChat = async (e) => {
     setMessageLoading(true);
+    setDbMessages([]);
     setSocketMessages([]);
     setChatUser(null);
     const groupName = e.currentTarget.dataset.name;
     setCurrentGroup(groupName);
     setAllMessagesFromDb(groupName);
-    socket.emit("groupJoin", groupName); // here username is group name
+    socket.emit("groupJoin", groupName);
   };
 
   return (

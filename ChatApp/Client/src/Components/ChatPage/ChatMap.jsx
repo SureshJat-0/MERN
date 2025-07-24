@@ -26,30 +26,37 @@ export default function ChatMap({
 
   return (
     <div className="grow p-4 overflow-y-auto">
-      {isMessagesLengthZero && (
+      {messageLoading ? (
         <div className="h-full font-bold text-2xl flex justify-center items-center">
-          {messageLoading ? (
-            <CircularProgress />
-          ) : (
+          <CircularProgress />
+        </div>
+      ) : (
+        isMessagesLengthZero && (
+          <div className="h-full font-bold text-2xl flex justify-center items-center">
             <span>
               Start Chat with {chatUser?.username || currentGroup + " chanel"}
             </span>
-          )}
-        </div>
+          </div>
+        )
       )}
-      {/* messages from data base  */}
-      <ul className="flex flex-col">
-        {dbMessages.map((message, index) => (
-          <MessageMap value={{ message, index }} key={index} />
-        ))}
-      </ul>
-      {/* messages from socket  */}
-      <ul>
-        {socketMessages.map((message, index) => (
-          <MessageMap value={{ message, index }} key={index} />
-        ))}
-      </ul>
-      <div ref={bottomRef}></div>
+      {!messageLoading && (
+        <>
+          {/* messages from data base  */}
+          <ul className="flex flex-col">
+            {dbMessages.map((message, index) => (
+              <MessageMap value={{ message, index }} key={index} />
+            ))}
+          </ul>
+          {/* messages from socket  */}
+          <ul>
+            {socketMessages.map((message, index) => (
+              <MessageMap value={{ message, index }} key={index} />
+            ))}
+          </ul>
+          {/* for auto scroll  */}
+          <div ref={bottomRef}></div>
+        </>
+      )}
     </div>
   );
 }
