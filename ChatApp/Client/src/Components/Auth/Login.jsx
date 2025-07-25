@@ -73,6 +73,7 @@ export default function Login() {
               type="text"
               variant="outlined"
               value={loginInput}
+              autoComplete="username"
               onChange={(e) => setLoginInput(e.target.value)}
             />
             <TextField

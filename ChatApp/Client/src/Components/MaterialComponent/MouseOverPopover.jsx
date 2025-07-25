@@ -10,6 +10,9 @@ export default function MouseHoverPopover({ element, popover }) {
   };
 
   const handlePopoverClose = () => {
+    if (document.activeElement) {
+    document.activeElement.blur();
+  }
     setAnchorEl(null);
   };
 

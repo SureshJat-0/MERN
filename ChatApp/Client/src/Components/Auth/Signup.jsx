@@ -54,6 +54,7 @@ export default function Login() {
               type="text"
               variant="outlined"
               value={signupInput}
+              autoComplete="username"
               onChange={(e) => setSignupInput(e.target.value)}
             />
             <TextField
