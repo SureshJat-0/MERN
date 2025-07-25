@@ -41,7 +41,9 @@ export default function MouseHoverPopover({ element, popover }) {
         onClose={handlePopoverClose}
         disableRestoreFocus
       >
-        <Typography sx={{ p: 1 }}>{popover}</Typography>
+        <Typography sx={{ p: 1 }} tabIndex={-1}>
+          {popover}
+        </Typography>
       </Popover>
     </div>
   );

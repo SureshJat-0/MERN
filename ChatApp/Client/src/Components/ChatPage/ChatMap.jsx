@@ -34,7 +34,7 @@ export default function ChatMap({
         isMessagesLengthZero && (
           <div className="h-full font-bold text-2xl flex justify-center items-center">
             <span>
-              Start Chat with {chatUser?.username || currentGroup + " chanel"}
+              Start Chat with {chatUser?.username || currentGroup + " channel"}
             </span>
           </div>
         )

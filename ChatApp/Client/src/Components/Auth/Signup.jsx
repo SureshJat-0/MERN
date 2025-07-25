@@ -49,7 +49,7 @@ export default function Login() {
           >
             <h1 className="text-4xl font-bold text-center">Signup</h1>
             <TextField
-              id="outlined-basic"
+              id="outlined-user"
               label="Username"
               type="text"
               variant="outlined"
@@ -57,11 +57,12 @@ export default function Login() {
               onChange={(e) => setSignupInput(e.target.value)}
             />
             <TextField
-              id="outlined-basic"
+              id="outlined-password"
               label="Password"
               type="password"
               variant="outlined"
               value={passwordInput}
+              autoComplete="current-password"
               onChange={(e) => setPasswordInput(e.target.value)}
             />
 
