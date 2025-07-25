@@ -24,7 +24,7 @@ export default function Navbar() {
         withCredentials: true,
       });
       popupState.close();
-      navigate("/login");
+      navigate("/signin");
       setCurrentUser(null);
       console.log("User logout successfully!");
       showSnackbar("User Logout successfully!");
@@ -32,7 +32,7 @@ export default function Navbar() {
     } catch (err) {
       console.log("Logout Error!", err);
       showSnackbar("Logout Error!");
-      navigate("/login");
+      navigate("/signin");
       popupState.close();
     }
   };
@@ -47,7 +47,7 @@ export default function Navbar() {
           <Link to="/" className="my-2">
             <MouseHoverPopover element={<ChatIcon />} popover={"Chat"} />
           </Link>
-          <Link to="/login" className="my-2">
+          <Link to="/signin" className="my-2">
             <MouseHoverPopover element={<LoginIcon />} popover={"Login"} />
           </Link>
         </div>
@@ -61,7 +61,7 @@ export default function Navbar() {
                 className="cursor-pointer"
               />
               <Menu {...bindMenu(popupState)}>
-                <Link to="/login">
+                <Link to="/signin">
                   <MenuItem onClick={popupState.close}>
                     <LoginIcon className="mr-2" />
                     <span>Login</span>

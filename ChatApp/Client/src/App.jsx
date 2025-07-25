@@ -57,7 +57,7 @@ function App() {
             </ProtactedRoute>
           }
         />
-        <Route path="/login" element={<Login />} />
+        <Route path="/signin" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="*" element={<Page404 />} />
       </Routes>

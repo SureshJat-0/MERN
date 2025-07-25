@@ -14,7 +14,7 @@ export default function ProtactedRoute({ children }) {
   }, [currentUser, showSnackbar]);
 
   if (!currentUser) {
-    return <Navigate to="/login" />;
+    return <Navigate to="/signin" />;
   }
   return children;
 }

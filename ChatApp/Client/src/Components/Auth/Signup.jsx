@@ -25,7 +25,7 @@ export default function Login() {
       console.log("User signup Successfully!");
       setSignupInput("");
       setPasswordInput("");
-      navigate("/login");
+      navigate("/signin");
     } catch (err) {
       const errorMsg = err.response.data.message;
       console.log(errorMsg);
@@ -73,7 +73,7 @@ export default function Login() {
             </button>
             <p>
               Already have an account?{" "}
-              <Link to="/login" className="text-indigo-800">
+              <Link to="/signin" className="text-indigo-800">
                 {" "}
                 Login{" "}
               </Link>
