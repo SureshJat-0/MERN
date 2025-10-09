@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useUser } from "./context/User";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import ProtactedRoute from "./Components/Auth/ProtactedRoute";
 import CircularProgress from "@mui/material/CircularProgress";
 import Login from "./Components/Auth/Login";
@@ -57,6 +57,8 @@ function App() {
             </ProtactedRoute>
           }
         />
+        {/* /login was creating some glitch on render  */}
+        <Route path="/login" element={<Navigate to='/signin' />} /> 
         <Route path="/signin" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="*" element={<Page404 />} />
