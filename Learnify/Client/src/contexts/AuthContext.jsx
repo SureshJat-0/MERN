@@ -5,12 +5,8 @@ const AuthContext = createContext();
 export const useAuth = () => useContext(AuthContext);
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(localStorage.getItem("user") || null);
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")) || null);
   const [token, setToken] = useState(localStorage.getItem("token") || null);
-
-  useEffect(() => {
-    console.log(user);
-  }, []);
 
   useEffect(() => {
     if (token) {

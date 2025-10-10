@@ -14,9 +14,11 @@ import StudentDashboard from "./pages/StudentDashboard";
 import TeacherDashboard from "./pages/TeacherDashboard";
 import PageNotFound from "./pages/PageNotFound";
 
-function ProtectedRoute({ children }) {
-  const { token } = useAuth();
-  if (!token) return <Navigate to="/login" />;
+function ProtectedRoute({ children, allowedRoles }) {
+  const { user } = useAuth();
+  if (!user) return <Navigate to="/login" />;
+  if (allowedRoles && !allowedRoles.includes(user.role))
+    return <Navigate to="/unauthorized" />;
   return children;
 }
 
@@ -31,7 +33,7 @@ function App() {
         <Route
           path="/dashboard/student"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute allowedRoles={["student"]}>
               <StudentDashboard />
             </ProtectedRoute>
           }
@@ -40,14 +42,14 @@ function App() {
         <Route
           path="/dashboard/teacher"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute allowedRoles={["teacher"]}>
               <TeacherDashboard />
             </ProtectedRoute>
           }
         />
 
         <Route path="/unauthorized" element={<Unauthorized />} />
-        <Route path="*" exact={true} element={<PageNotFound />} />
+        <Route path="*" element={<PageNotFound />} />
       </Routes>
     </Router>
   );
