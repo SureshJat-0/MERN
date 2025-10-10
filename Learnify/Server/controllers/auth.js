@@ -20,9 +20,18 @@ const userLogin = async (req, res) => {
   const user = await User.findOne({ email });
   if (!user) return res.status(400).send({ message: "User not found!" });
   const isMatch = await bcrypt.compare(password, user.password);
-  if (!isMatch) return res.status(400).send({ message: "Invalid credentials!" });
-  const token = jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET, { expiresIn: "7d" });
+  if (!isMatch)
+    return res.status(400).send({ message: "Invalid credentials!" });
+  const token = jwt.sign(
+    { id: user.id, role: user.role },
+    process.env.JWT_SECRET,
+    { expiresIn: "7d" }
+  );
   return res.send({ token, user: { id: user.id, email: user.email } });
 };
 
-export { userRegister, userLogin };
+const getUser = (req, res) => {
+  res.send({ user: req.user });
+};
+
+export { userRegister, userLogin, getUser };
