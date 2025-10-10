@@ -5,8 +5,12 @@ const AuthContext = createContext();
 export const useAuth = () => useContext(AuthContext);
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(localStorage.getItem("user") || null);
   const [token, setToken] = useState(localStorage.getItem("token") || null);
+
+  useEffect(() => {
+    console.log(user);
+  }, []);
 
   useEffect(() => {
     if (token) {
@@ -25,6 +29,7 @@ export function AuthProvider({ children }) {
       setToken(res.data.token);
       setUser(res.data.user);
       localStorage.setItem("token", res.data.token);
+      localStorage.setItem("user", JSON.stringify(res.data.user));
     } catch (err) {
       console.log(err?.response?.data);
     }
@@ -45,6 +50,7 @@ export function AuthProvider({ children }) {
     setUser(null);
     setToken(null);
     localStorage.removeItem("token");
+    localStorage.removeItem("user");
     console.log("User logout successfully!");
   };
 

@@ -27,7 +27,10 @@ const userLogin = async (req, res) => {
     process.env.JWT_SECRET,
     { expiresIn: "7d" }
   );
-  return res.send({ token, user: { id: user.id, email: user.email } });
+  return res.send({
+    token,
+    user: { id: user.id, name: user.name, email: user.email, role: user.role },
+  });
 };
 
 const getUser = (req, res) => {
