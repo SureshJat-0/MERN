@@ -8,7 +8,19 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(localStorage.getItem("token") || null);
 
+  // Restore user + token on refresh
   useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    const storedToken = localStorage.getItem("token");
+    if (storedUser && storedToken) {
+      setUser(JSON.parse(storedUser));
+      setToken(storedToken);
+      axios.defaults.headers.common["Authorization"] = `Bearer ${storedToken}`;
+    }
+  }, []);
+
+  useEffect(() => {
+    console.log(token);
     if (token) {
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
     } else {
@@ -18,15 +30,14 @@ export function AuthProvider({ children }) {
 
   const login = async (data) => {
     try {
-      const res = await axios.post(
-        "http://localhost:3000/api/auth/login",
-        data,
-        { withCredentials: true }
-      );
+      const res = await axios.post("/api/auth/login", data, {
+        withCredentials: true,
+      });
       console.log("User Login successfully!", res.data);
       setToken(res.data.token);
       setUser(res.data.user);
       localStorage.setItem("token", res.data.token);
+      localStorage.setItem("user", JSON.stringify(res.data.user));
     } catch (err) {
       console.log(err?.response?.data);
     }
@@ -34,7 +45,7 @@ export function AuthProvider({ children }) {
 
   const register = async (data) => {
     try {
-      const res = await axios.post("http://localhost:3000/api/auth/register", data, {
+      const res = await axios.post("/api/auth/register", data, {
         withCredentials: true,
       });
       console.log(res.data);
@@ -47,6 +58,7 @@ export function AuthProvider({ children }) {
     setUser(null);
     setToken(null);
     localStorage.removeItem("token");
+    localStorage.removeItem("user");
     console.log("User logout successfully!");
   };
 

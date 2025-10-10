@@ -1,13 +1,9 @@
-import React, { useState } from "react";
-import axios from "axios";
+import { useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 
 export default function Login() {
-  const [token, setToken] = useState(null);
-  const [user, setUser] = useState(null);
 
   const { login } = useAuth();
-
   const [inputFields, setInputFields] = useState({
     email: "",
     password: "",
@@ -21,6 +17,7 @@ export default function Login() {
       password: "",
     });
   };
+
   return (
     <div className="flex flex-col gap-4">
       <h1>Login User</h1>
