@@ -8,11 +8,12 @@ import {
 import { useAuth } from "./contexts/AuthContext";
 import Register from "./pages/register";
 import Login from "./pages/Login";
-import Home from "./pages/Home";
+import Courses from "./pages/Courses";
 import Unauthorized from "./pages/Unauthorized";
 import StudentDashboard from "./pages/StudentDashboard";
 import TeacherDashboard from "./pages/TeacherDashboard";
 import PageNotFound from "./pages/PageNotFound";
+import NewCourse from "./pages/NewCourse";
 
 function ProtectedRoute({ children, allowedRoles }) {
   const { user } = useAuth();
@@ -26,7 +27,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Courses />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
@@ -44,6 +45,15 @@ function App() {
           element={
             <ProtectedRoute allowedRoles={["teacher"]}>
               <TeacherDashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/courses/new"
+          element={
+            <ProtectedRoute allowedRoles={["teacher"]}>
+              <NewCourse />
             </ProtectedRoute>
           }
         />
