@@ -3,12 +3,22 @@ import User from "../models/user.js";
 
 const getCourse = async (req, res) => {
   const { courseId } = req.params;
-  console.log(courseId);
   const course = await Course.findById(courseId).populate("lessons");
-  if(!course) return res.send({ message: "Invalid CourseId!"});
-  console.log(course);
+  if (!course) return res.send({ message: "Invalid CourseId!" });
   res.send(course);
-}
+};
+
+const editcourse = async (req, res) => {
+  const { courseId, title, description } = req.body;
+  const updatedData = { title, description };
+  const updatedCourse = await Course.findByIdAndUpdate(
+    courseId,
+    { $set: updatedData },
+    { new: true }
+  );
+  if (!updatedCourse) return res.send({ message: "Invalid courseId!" });
+  res.send({ message: "Document updated!", updatedCourse });
+};
 
 const uploadCourse = async (req, res) => {
   const { title, description } = req.body;
@@ -37,9 +47,15 @@ const getAllCourses = async (req, res) => {
 const getTeacherCourses = async (req, res) => {
   const teacherId = req.params.teacherId;
   const teacher = await User.findById(teacherId).populate("courses");
-  if(!teacher) return res.send({ message: "Invalid teacherId"});
+  if (!teacher) return res.send({ message: "Invalid teacherId" });
   const courses = teacher.courses;
   res.send(courses);
-}
+};
 
-export { uploadCourse, getAllCourses, getTeacherCourses, getCourse };
+export {
+  uploadCourse,
+  getAllCourses,
+  getTeacherCourses,
+  getCourse,
+  editcourse,
+};

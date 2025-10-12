@@ -37,11 +37,14 @@ export default function TeacherDashboard() {
       <br />
       <ul>
         {teacherCourses.map((course, ind) => (
+          <div className="flex gap-4 items-center" key={ind}>
           <Link to={`/courses/get/${course._id}`} key={ind}>
-          <li
-            className="border rounded p-2 cursor-pointer"
-            key={ind}
-          >{`Title : ${course.title} -- Description : ${course.description}`}</li></Link>
+            <li className="border rounded p-2 cursor-pointer" key={ind}>
+              {`Title : ${course.title} -- Description : ${course.description}`}{" "}
+            </li>
+          </Link>
+          <Link to={`/courses/edit/${course._id}`} key={ind+1000} className="border rounded p-2">Edit</Link>
+          </div>
         ))}
       </ul>
     </div>
