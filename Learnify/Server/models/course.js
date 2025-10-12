@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const CouseSchema = mongoose.Schema({
+export const CourseSchema = mongoose.Schema({
   title: {
     type: String,
     required: true,
@@ -9,9 +9,9 @@ const CouseSchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  lessons: [{ type: String }],
+  lessons: [{ type: mongoose.Schema.Types.ObjectId, ref: "lesson" }],
 });
 
-const Course = mongoose.model("course", CouseSchema);
+const Course = mongoose.model("course", CourseSchema);
 
 export default Course;

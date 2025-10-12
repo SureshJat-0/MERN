@@ -1,10 +1,13 @@
 import express from "express";
 
-import { uploadCourse, getAllCourses } from "../controllers/course.js";
+import verifyToken from "../middlewares/auth.js";
+import { uploadCourse, getAllCourses, getTeacherCourses, getCourse } from "../controllers/course.js";
 
 const CourseRouter = express.Router();
 
-CourseRouter.route("/new").post(uploadCourse);
+CourseRouter.route("/get/:courseId").get(getCourse);
+CourseRouter.route("/new").post(verifyToken, uploadCourse);
 CourseRouter.route("/all").get(getAllCourses);
+CourseRouter.route("/teacher/:teacherId").get(getTeacherCourses);
 
 export default CourseRouter;

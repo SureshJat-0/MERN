@@ -13,6 +13,10 @@ export default function NewCourse() {
       withCredentials: true,
     });
     console.log(res.data);
+    setCourseFields({
+      title: "",
+      description: "",
+    })
   };
 
   return (

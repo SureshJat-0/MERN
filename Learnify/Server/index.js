@@ -5,6 +5,7 @@ import cors from "cors";
 
 import AuthRouter from "./routes/auth.js";
 import CourseRouter from "./routes/course.js";
+import LessonRouter from "./routes/lesson.js";
 
 dotenv.config();
 
@@ -27,6 +28,7 @@ mongoose
 
 app.use("/api/auth", AuthRouter);
 app.use("/api/courses", CourseRouter);
+app.use("/api/lesson", LessonRouter);
 
 app.listen(PORT, () => {
   console.log("Server started!");

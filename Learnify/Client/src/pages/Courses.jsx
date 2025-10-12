@@ -8,7 +8,6 @@ export default function Courses() {
   const getAllCourses = async () => {
     const res = await axios.get("/api/courses/all", { withCredentials: true });
     setCourses(res.data);
-    console.log(res.data);
   };
 
   useEffect(() => {
@@ -29,9 +28,12 @@ export default function Courses() {
       <h1>All Courses</h1>
       <ul>
         {courses.map((course, ind) => (
-          <li
-            key={ind}
-          >{`Title : ${course.title} -- Description : ${course.description}`}</li>
+          <Link to={`/courses/get/${course._id}`} key={ind}>
+            <li
+              className="p-2 border rounded"
+              key={ind}
+            >{`Title : ${course.title} -- Description : ${course.description}`}</li>
+          </Link>
         ))}
       </ul>
     </div>

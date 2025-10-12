@@ -34,6 +34,7 @@ const userLogin = async (req, res) => {
 };
 
 const getUser = (req, res) => {
+  console.log(req.user);
   res.send({ user: req.user });
 };
 

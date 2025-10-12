@@ -14,6 +14,7 @@ import StudentDashboard from "./pages/StudentDashboard";
 import TeacherDashboard from "./pages/TeacherDashboard";
 import PageNotFound from "./pages/PageNotFound";
 import NewCourse from "./pages/NewCourse";
+import CoursePage from "./pages/CoursePage";
 
 function ProtectedRoute({ children, allowedRoles }) {
   const { user } = useAuth();
@@ -57,6 +58,8 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        <Route path="/courses/get/:courseId" element={<CoursePage />} />
 
         <Route path="/unauthorized" element={<Unauthorized />} />
         <Route path="*" element={<PageNotFound />} />
