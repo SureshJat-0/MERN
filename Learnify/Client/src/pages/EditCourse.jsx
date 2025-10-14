@@ -1,17 +1,19 @@
-import { useState } from "react";
-import { useParams } from "react-router-dom";
 import axios from "axios";
+import { useRef, useState } from "react";
+import { useParams } from "react-router-dom";
 import { useEffect } from "react";
 
 export default function EditCourse() {
   const { courseId } = useParams();
   const [course, setCourse] = useState({});
 
-  const [editCourseFields, setEditCourseFields] = useState({ // course details
-    courseTitle: course?.title || "",
-    courseDescription: course?.description || "",
+  const [editCourseFields, setEditCourseFields] = useState({
+    // course details
+    courseTitle: "",
+    courseDescription: "",
   });
-  const [editFields, setEditFields] = useState({ // new lesson details
+  const [editFields, setEditFields] = useState({
+    // new lesson details
     title: "",
     description: "",
   });
@@ -38,7 +40,9 @@ export default function EditCourse() {
       },
       { withCredentials: true }
     );
+    console.log(res.data);
     setEditFields({
+      // -------------------------- Not working --------------------------
       title: "",
       description: "",
     });
@@ -46,8 +50,9 @@ export default function EditCourse() {
 
   const editCourseDetails = async (e) => {
     e.preventDefault();
+    console.log(courseId);
     const res = await axios.put(
-      `/api/courses/edit/${courseId}`,
+      "/api/courses/edit",
       {
         courseId,
         title: editCourseFields.courseTitle,
@@ -62,10 +67,30 @@ export default function EditCourse() {
     console.log(res.data);
   };
 
-  const editLesson = (e) => {
+  const [newLessonFields, setNewLessonFields] = useState({
+    title: "",
+    description: "",
+  });
+  const [lesson, setLesson] = useState({});
+  const editLessonRef = useRef(null);
+
+  // ------------ Not working --------------
+  const editLesson = async (e) => {
     e.preventDefault();
-    console.log("Editing lesson...");
-  }
+    console.log(lesson._id);
+    const res = await axios.put(
+      "/api/lesson/edit",
+      {
+        lessonId: lesson._id,
+        title: lesson.title,
+        description: lesson.description,
+      },
+      { withCredentials: true }
+    );
+    console.log(lesson);
+    console.log(res.data);
+    setLesson({});
+  };
 
   return (
     <div className="">
@@ -125,18 +150,64 @@ export default function EditCourse() {
             setEditFields({ ...editFields, [e.target.name]: e.target.value })
           }
         />
-        <button onClick={addNewLesson}>Add Lesson</button>        
+        <button onClick={addNewLesson}>Add Lesson</button>
       </div>
-          <br />
-          <br />
+      <br />
+      <br />
       <div className="">
+        {/* Edit lesson  */}
+        <div className="hidden" ref={editLessonRef}>
+          <h1>Edit Lesson</h1>
+          <input
+            name="title"
+            type="text"
+            placeholder="Lesson description..."
+            value={newLessonFields.name}
+            required
+            onChange={(e) =>
+              setNewLessonFields({
+                ...newLessonFields,
+                [e.target.name]: e.target.value,
+              })
+            }
+          />
+          <input
+            name="description"
+            type="text"
+            placeholder="Lesson description..."
+            value={newLessonFields.name}
+            required
+            onChange={(e) =>
+              setNewLessonFields({
+                ...newLessonFields,
+                [e.target.name]: e.target.value,
+              })
+            }
+          />
+          <button onClick={(e) => editLesson(e)}>Save Edit</button>
+        </div>
+
+        <br />
+        <br />
+
         <h1>Lessons</h1>
         <br />
         <ul className="flex flex-col gap-2 cursor-pointer">
           {course?.lessons?.map((lesson, ind) => (
             <div className="flex" key={ind}>
-              <li key={ind} className="grow border rounded p-2 mx-4">{lesson.title}</li>
-              <button onClick={editLesson} key={ind+1000}>Edit</button>
+              <li key={ind} className="grow border rounded p-2 mx-4">
+                {lesson.title}
+              </li>
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  editLessonRef.current.className = "block";
+                  setLesson(lesson);
+                }}
+                key={ind + 1000}
+              >
+                Open Form
+              </button>
             </div>
           ))}
         </ul>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 
 export default function CoursePage() {
@@ -26,11 +26,13 @@ export default function CoursePage() {
       <h1>Lessons</h1>
       <ul>
         {course?.lessons?.map((lesson, ind) => (
-          <li key={ind} className="my-4">
-            <span>Title : {lesson.title}</span>
-            <br />
-            <span>Description : {lesson.description}</span>
-          </li>
+          <Link to={`/lessons/get/${lesson._id}`} key={ind}>
+            <li key={ind} className="my-4 border rounded p-4">
+              <span>Title : {lesson.title}</span>
+              <br />
+              <span>Description : {lesson.description}</span>
+            </li>
+          </Link>
         ))}
       </ul>
     </div>

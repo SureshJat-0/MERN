@@ -10,6 +10,7 @@ export const CourseSchema = mongoose.Schema({
     required: true,
   },
   lessons: [{ type: mongoose.Schema.Types.ObjectId, ref: "lesson" }],
+  students: [{ type: mongoose.Schema.Types.ObjectId, ref: "user"}],
 });
 
 const Course = mongoose.model("course", CourseSchema);

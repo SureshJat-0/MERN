@@ -17,7 +17,7 @@ const editcourse = async (req, res) => {
     { new: true }
   );
   if (!updatedCourse) return res.send({ message: "Invalid courseId!" });
-  res.send({ message: "Document updated!", updatedCourse });
+  res.send({ message: "Course updated!", updatedCourse });
 };
 
 const uploadCourse = async (req, res) => {
@@ -52,10 +52,20 @@ const getTeacherCourses = async (req, res) => {
   res.send(courses);
 };
 
+const addStudentInCourse = async (req, res) => {
+  const { courseId, studentId } = req.body;
+  if(!courseId) return res.send({ message: "Course id required!"});
+  const course = await Course.findById(courseId);
+  course.students.push(studentId);
+  await course.save();
+  res.send({ student: studentId, message: "New student added!"});
+}
+
 export {
   uploadCourse,
   getAllCourses,
   getTeacherCourses,
   getCourse,
   editcourse,
+  addStudentInCourse,
 };

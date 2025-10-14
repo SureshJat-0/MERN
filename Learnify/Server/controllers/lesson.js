@@ -12,4 +12,22 @@ const postNewLesson = async (req, res) => {
   res.send({ lesson, message: "New lesson added!" });
 };
 
-export { postNewLesson };
+// ------------- Not working ----------------
+const editLesson = async (req, res) => {
+  const { lessonId, title, description } = req.body;
+  // const updatedLesson = { title, description };
+  // const lesson = await Lesson.findByIdAndUpdate(
+  //   lessonId,
+  //   { $set: {title, description} },
+  //   { new: true }
+  // );
+  const lesson = await Lesson.findById(lessonId);
+  lesson.title = title;
+  lesson.description = description;
+  await lesson.save();
+  console.log(lesson);
+  if (!lesson) return res.send({ message: "Invalid lessonId!" });
+  res.send({ message: "Lesson updated!", lesson });
+};
+
+export { postNewLesson, editLesson };
