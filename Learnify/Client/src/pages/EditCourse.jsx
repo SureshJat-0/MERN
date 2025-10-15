@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useEffect } from "react";
 
 export default function EditCourse() {
@@ -50,7 +50,6 @@ export default function EditCourse() {
 
   const editCourseDetails = async (e) => {
     e.preventDefault();
-    console.log(courseId);
     const res = await axios.put(
       "/api/courses/edit",
       {
@@ -74,22 +73,24 @@ export default function EditCourse() {
   const [lesson, setLesson] = useState({});
   const editLessonRef = useRef(null);
 
-  // ------------ Not working --------------
   const editLesson = async (e) => {
     e.preventDefault();
-    console.log(lesson._id);
     const res = await axios.put(
       "/api/lesson/edit",
       {
         lessonId: lesson._id,
-        title: lesson.title,
-        description: lesson.description,
+        title: newLessonFields.title,
+        description: newLessonFields.description,
       },
       { withCredentials: true }
     );
-    console.log(lesson);
-    console.log(res.data);
+    setNewLessonFields({ // ------------ Not working --------------
+      title: "",
+      description: "",
+    });
     setLesson({});
+    console.log(" --> ", newLessonFields);
+    console.log(res.data);
   };
 
   return (
@@ -154,6 +155,7 @@ export default function EditCourse() {
       </div>
       <br />
       <br />
+
       <div className="">
         {/* Edit lesson  */}
         <div className="hidden" ref={editLessonRef}>
@@ -194,7 +196,7 @@ export default function EditCourse() {
         <br />
         <ul className="flex flex-col gap-2 cursor-pointer">
           {course?.lessons?.map((lesson, ind) => (
-            <div className="flex" key={ind}>
+            <Link to={`/lessons/get/${lesson._id}`} className="flex" key={ind}>
               <li key={ind} className="grow border rounded p-2 mx-4">
                 {lesson.title}
               </li>
@@ -208,7 +210,7 @@ export default function EditCourse() {
               >
                 Open Form
               </button>
-            </div>
+            </Link>
           ))}
         </ul>
       </div>

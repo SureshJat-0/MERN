@@ -24,7 +24,7 @@ export default function Courses() {
 
   return (
     <div className="">
-      <div className="flex gap-8">
+      <div className="flex gap-8"> { /* Navbar section */}
         <Link to="/">Courses</Link>
         <Link to="/login">Login</Link>
         <Link to="/dashboard/teacher">Teacher Dashboard</Link>
