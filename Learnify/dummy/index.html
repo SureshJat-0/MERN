@@ -1,0 +1,411 @@
+<!doctype html>
+<html lang="en" class="h-full">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Learnify — Modern Online Learning UI</title>
+    <!-- Tailwind Play CDN (for prototyping) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      /* Custom tweaks */
+      :root {
+        color-scheme: dark;
+      }
+      body { -webkit-font-smoothing:antialiased; }
+      /* scrollbar styling for dark theme */
+      ::-webkit-scrollbar { width: 10px; height: 10px; }
+      ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 8px; }
+    </style>
+  </head>
+  <body class="h-full bg-gray-900 text-gray-100">
+    <div id="app" class="min-h-screen flex flex-col">
+
+      <!-- NAVBAR (YouTube-style) -->
+      <header class="bg-gray-800/70 backdrop-blur sticky top-0 z-40 border-b border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="flex items-center justify-between h-16">
+            <div class="flex items-center gap-4">
+              <button id="menuBtn" class="p-2 rounded-md hover:bg-gray-700/40">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+              </button>
+
+              <a href="#/" class="flex items-center gap-3" data-link>
+                <div class="w-10 h-10 bg-rose-500 rounded-md flex items-center justify-center text-white font-bold text-lg">L</div>
+                <span class="font-semibold text-lg hidden sm:inline">Learnify</span>
+              </a>
+            </div>
+
+            <div class="flex-1 mx-4">
+              <div class="relative max-w-2xl mx-auto">
+                <input id="search" placeholder="Search courses, lessons..." class="w-full bg-gray-800/60 placeholder-gray-400 rounded-full py-2 pl-4 pr-10 focus:outline-none focus:ring-2 focus:ring-rose-500" />
+                <button class="absolute right-1 top-1/2 -translate-y-1/2 p-2 rounded-full hover:bg-gray-700/30">
+                  <svg class="w-5 h-5 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z"/></svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+              <nav class="hidden md:flex items-center gap-2">
+                <a href="#/teacher" data-link class="px-3 py-2 rounded hover:bg-gray-700/30">Teach</a>
+                <a href="#/dashboard" data-link class="px-3 py-2 rounded hover:bg-gray-700/30">Dashboard</a>
+              </nav>
+              <div class="flex items-center gap-3">
+                <a href="#/login" data-link class="text-sm px-3 py-2 rounded bg-rose-600 hover:bg-rose-500">Sign in</a>
+                <a href="#/register" data-link class="text-sm px-3 py-2 rounded border border-gray-700">Sign up</a>
+                <button id="avatarBtn" class="w-9 h-9 rounded-full bg-gray-700/40 flex items-center justify-center text-sm">S</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main class="flex-1">
+        <div id="view" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"></div>
+      </main>
+
+      <footer class="border-t border-gray-800 bg-gray-900/60 py-4 text-center text-sm text-gray-400">
+        © <span id="year"></span> Learnify — modern learning UI demo
+      </footer>
+    </div>
+
+    <script>
+      // App state (mock data)
+      const store = {
+        user: null, // mock auth state
+        courses: [
+          { id: 'c1', title: 'React for Beginners', author: 'Jane Doe', description: 'Learn React fundamentals', thumbnail: 'https://picsum.photos/seed/react/400/240', lessons: [
+            { id: 'l1', title: 'Introduction', duration: '6:12', content: 'Welcome to React' },
+            { id: 'l2', title: 'Components', duration: '12:30', content: 'Components basics' },
+          ]},
+          { id: 'c2', title: 'Node.js & Express', author: 'John Smith', description: 'Build servers with Node', thumbnail: 'https://picsum.photos/seed/node/400/240', lessons: [
+            { id: 'l3', title: 'Setup', duration: '8:10', content: 'Install Node' },
+            { id: 'l4', title: 'Routing', duration: '14:05', content: 'Express routing' },
+          ]},
+          { id: 'c3', title: 'Advanced CSS & Tailwind', author: 'Alex Lin', description: 'Modern styling techniques', thumbnail: 'https://picsum.photos/seed/css/400/240', lessons: [
+            { id: 'l5', title: 'Flexbox', duration: '10:22', content: 'Master Flex' },
+            { id: 'l6', title: 'Grid', duration: '11:40', content: 'CSS Grid' },
+          ]}
+        ]
+      };
+
+      // small router
+      function navigate() {
+        const hash = location.hash || '#/';
+        const view = document.getElementById('view');
+        const [_, route, id, sub] = hash.split('/');
+        // clear search highlight
+        renderNavActive(route);
+
+        if (route === '' || route === undefined) return renderHome();
+        if (route === '') return renderHome();
+        switch(route) {
+          case '':
+          case undefined:
+          case '#':
+          case '':
+            return renderHome();
+          case '':
+            return renderHome();
+          case 'course':
+            return renderCourse(id);
+          case 'lesson':
+            return renderLesson(id);
+          case 'login':
+            return renderLogin();
+          case 'register':
+            return renderRegister();
+          case 'dashboard':
+            return renderStudentDashboard();
+          case 'teacher':
+            return renderTeacherDashboard();
+          case 'new-lesson':
+            return renderNewLessonForm(id); // id is course id in this case
+          default:
+            return renderNotFound();
+        }
+      }
+
+      // Helpers
+      function q(html) { const template = document.createElement('template'); template.innerHTML = html.trim(); return template.content.firstChild; }
+
+      function renderNavActive(route) {
+        // noop for now
+      }
+
+      // Views
+      function renderHome() {
+        const el = document.createElement('div');
+        el.innerHTML = `
+          <div class="flex items-center justify-between mb-6">
+            <h1 class="text-3xl font-extrabold">All Courses</h1>
+            <div class="text-sm text-gray-400">${store.courses.length} courses</div>
+          </div>
+
+          <div class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+            ${store.courses.map(c => `
+              <article class="bg-gray-800/60 rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-shadow">
+                <a href="#/course/${c.id}" data-link class="block">
+                  <img src="${c.thumbnail}" alt="${c.title}" class="w-full h-40 object-cover" />
+                </a>
+                <div class="p-4">
+                  <a href="#/course/${c.id}" data-link class="text-lg font-semibold hover:text-rose-400">${c.title}</a>
+                  <p class="text-sm text-gray-400 mt-2">${c.description}</p>
+                  <div class="mt-4 flex items-center justify-between">
+                    <div class="text-xs text-gray-400">By ${c.author}</div>
+                    <a href="#/course/${c.id}" data-link class="text-sm text-rose-500 hover:underline">View course →</a>
+                  </div>
+                </div>
+              </article>
+            `).join('')}
+          </div>
+        `;
+        const view = document.getElementById('view'); view.innerHTML = ''; view.appendChild(el);
+      }
+
+      function findCourseById(id){ return store.courses.find(c=>c.id===id); }
+      function findLessonById(id){ return store.courses.flatMap(c=>c.lessons.map(l=>({...l, courseId:c.id, courseTitle:c.title}))).find(l=>l.id===id); }
+
+      function renderCourse(id){
+        const course = findCourseById(id);
+        if (!course) return renderNotFound();
+        const el = document.createElement('div');
+        el.innerHTML = `
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="lg:col-span-2">
+              <div class="bg-gray-800/50 rounded-lg overflow-hidden">
+                <img src="${course.thumbnail}" class="w-full h-56 object-cover" />
+                <div class="p-6">
+                  <h2 class="text-2xl font-bold">${course.title}</h2>
+                  <div class="text-sm text-gray-400 mt-1">By ${course.author}</div>
+                  <p class="mt-4 text-gray-300">${course.description}</p>
+                </div>
+              </div>
+
+              <section class="mt-6">
+                <h3 class="text-xl font-semibold mb-3">Lessons</h3>
+                <div class="space-y-3">
+                  ${course.lessons.map(l => `
+                    <a href="#/lesson/${l.id}" data-link class="block bg-gray-800/40 rounded p-3 hover:bg-gray-700/50">
+                      <div class="flex items-center justify-between">
+                        <div>
+                          <div class="font-medium">${l.title}</div>
+                          <div class="text-sm text-gray-400">${l.duration} • ${course.title}</div>
+                        </div>
+                        <div class="text-sm text-rose-400">Open</div>
+                      </div>
+                    </a>
+                  `).join('')}
+                </div>
+              </section>
+            </div>
+
+            <aside class="space-y-4">
+              <div class="bg-gray-800/50 p-4 rounded-md">
+                <div class="text-sm text-gray-400">Course info</div>
+                <div class="mt-3 text-sm">Total lessons: <span class="font-medium">${course.lessons.length}</span></div>
+                <a href="#/new-lesson/${course.id}" data-link class="mt-4 inline-block text-center w-full bg-rose-600 hover:bg-rose-500 text-white py-2 rounded">Add Lesson</a>
+              </div>
+              <div class="bg-gray-800/50 p-4 rounded-md text-sm text-gray-400">Recommended</div>
+            </aside>
+          </div>
+        `;
+        const view = document.getElementById('view'); view.innerHTML = ''; view.appendChild(el);
+      }
+
+      function renderLesson(id){
+        const lesson = findLessonById(id);
+        if (!lesson) return renderNotFound();
+        const el = document.createElement('div');
+        el.innerHTML = `
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="lg:col-span-2">
+              <div class="aspect-video bg-black rounded-md overflow-hidden flex items-center justify-center">
+                <div class="text-gray-400">Video Player Placeholder</div>
+              </div>
+              <div class="mt-4 bg-gray-800/40 p-4 rounded-md">
+                <h2 class="text-xl font-semibold">${lesson.title}</h2>
+                <div class="text-sm text-gray-400 mt-1">${lesson.duration} • ${lesson.courseTitle}</div>
+                <p class="mt-3 text-gray-300">${lesson.content}</p>
+              </div>
+            </div>
+
+            <aside class="space-y-4">
+              <div class="bg-gray-800/50 p-4 rounded-md">
+                <div class="text-sm text-gray-400">Course</div>
+                <a href="#/course/${lesson.courseId}" data-link class="block mt-2 text-rose-400">${lesson.courseTitle}</a>
+                <div class="mt-4 text-sm text-gray-400">Other lessons</div>
+                <div class="mt-2 space-y-2">
+                  ${findCourseById(lesson.courseId).lessons.map(l=>`<a href="#/lesson/${l.id}" data-link class="block text-sm hover:underline">${l.title}</a>`).join('')}
+                </div>
+              </div>
+            </aside>
+          </div>
+        `;
+        const view = document.getElementById('view'); view.innerHTML = ''; view.appendChild(el);
+      }
+
+      function renderLogin(){
+        const el = document.createElement('div');
+        el.innerHTML = `
+          <div class="max-w-md mx-auto bg-gray-800/40 p-6 rounded-lg">
+            <h2 class="text-2xl font-bold mb-4">Sign in</h2>
+            <form id="loginForm" class="space-y-4">
+              <input name="email" placeholder="Email" class="w-full bg-gray-900/40 rounded px-3 py-2" />
+              <input name="password" type="password" placeholder="Password" class="w-full bg-gray-900/40 rounded px-3 py-2" />
+              <div class="flex items-center justify-between">
+                <button type="submit" class="bg-rose-600 px-4 py-2 rounded">Sign in</button>
+                <a href="#/register" data-link class="text-sm text-gray-400">Create an account</a>
+              </div>
+            </form>
+          </div>
+        `;
+        const view = document.getElementById('view'); view.innerHTML = ''; view.appendChild(el);
+
+        document.getElementById('loginForm').addEventListener('submit', (e)=>{
+          e.preventDefault();
+          store.user = { name: 'Student', role: 'student' };
+          location.hash = '#/dashboard';
+        });
+      }
+
+      function renderRegister(){
+        const el = document.createElement('div');
+        el.innerHTML = `
+          <div class="max-w-md mx-auto bg-gray-800/40 p-6 rounded-lg">
+            <h2 class="text-2xl font-bold mb-4">Create account</h2>
+            <form id="registerForm" class="space-y-4">
+              <input name="name" placeholder="Full name" class="w-full bg-gray-900/40 rounded px-3 py-2" />
+              <input name="email" placeholder="Email" class="w-full bg-gray-900/40 rounded px-3 py-2" />
+              <input name="password" type="password" placeholder="Password" class="w-full bg-gray-900/40 rounded px-3 py-2" />
+              <div class="flex items-center justify-between">
+                <button type="submit" class="bg-rose-600 px-4 py-2 rounded">Sign up</button>
+                <a href="#/login" data-link class="text-sm text-gray-400">Already have an account?</a>
+              </div>
+            </form>
+          </div>
+        `;
+        const view = document.getElementById('view'); view.innerHTML = ''; view.appendChild(el);
+
+        document.getElementById('registerForm').addEventListener('submit', (e)=>{
+          e.preventDefault();
+          store.user = { name: 'New Student', role: 'student' };
+          location.hash = '#/dashboard';
+        });
+      }
+
+      function renderStudentDashboard(){
+        if (!store.user) return location.hash = '#/login';
+        const el = document.createElement('div');
+        el.innerHTML = `
+          <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+            <aside class="lg:col-span-1 bg-gray-800/40 p-4 rounded-md">
+              <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded bg-gray-700/50 flex items-center justify-center">${store.user.name[0]||'S'}</div>
+                <div>
+                  <div class="font-semibold">${store.user.name}</div>
+                  <div class="text-sm text-gray-400">Student</div>
+                </div>
+              </div>
+              <nav class="mt-6 space-y-2 text-sm">
+                <a href="#/dashboard" data-link class="block px-2 py-1 rounded hover:bg-gray-700/30">My courses</a>
+                <a href="#/" data-link class="block px-2 py-1 rounded hover:bg-gray-700/30">Browse</a>
+                <a href="#/" data-link class="block px-2 py-1 rounded hover:bg-gray-700/30">Settings</a>
+              </nav>
+            </aside>
+
+            <div class="lg:col-span-3">
+              <h2 class="text-2xl font-bold mb-4">My Courses</h2>
+              <div class="grid sm:grid-cols-2 gap-4">
+                ${store.courses.map(c=>`<div class="bg-gray-800/40 p-4 rounded"><div class="flex items-center justify-between"><div><div class="font-semibold">${c.title}</div><div class="text-sm text-gray-400">${c.author}</div></div><a href="#/course/${c.id}" data-link class="text-rose-400">Open</a></div></div>`).join('')}
+              </div>
+            </div>
+          </div>
+        `;
+        const view = document.getElementById('view'); view.innerHTML = ''; view.appendChild(el);
+      }
+
+      function renderTeacherDashboard(){
+        if (!store.user) store.user = { name: 'Teacher', role: 'teacher' }; // allow sample
+        const el = document.createElement('div');
+        el.innerHTML = `
+          <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+            <aside class="lg:col-span-1 bg-gray-800/40 p-4 rounded-md">
+              <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded bg-rose-600/40 flex items-center justify-center">T</div>
+                <div>
+                  <div class="font-semibold">${store.user.name}</div>
+                  <div class="text-sm text-gray-400">Teacher</div>
+                </div>
+              </div>
+              <nav class="mt-6 space-y-2 text-sm">
+                <a href="#/teacher" data-link class="block px-2 py-1 rounded hover:bg-gray-700/30">My courses</a>
+                <a href="#/" data-link class="block px-2 py-1 rounded hover:bg-gray-700/30">Create course</a>
+                <a href="#/" data-link class="block px-2 py-1 rounded hover:bg-gray-700/30">Settings</a>
+              </nav>
+            </aside>
+
+            <div class="lg:col-span-3">
+              <div class="flex items-center justify-between mb-4">
+                <h2 class="text-2xl font-bold">Instructor Studio</h2>
+                <a href="#/" data-link class="text-rose-400">New course</a>
+              </div>
+              <div class="bg-gray-800/40 p-4 rounded mb-4">
+                <h3 class="font-semibold">Your courses</h3>
+                <div class="mt-3 grid sm:grid-cols-2 gap-3">
+                  ${store.courses.map(c=>`<div class="p-3 bg-gray-900/30 rounded"><div class="font-medium">${c.title}</div><div class="text-sm text-gray-400">${c.lessons.length} lessons</div><a href="#/course/${c.id}" data-link class="text-rose-400 text-sm">Open</a></div>`).join('')}
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+        const view = document.getElementById('view'); view.innerHTML = ''; view.appendChild(el);
+      }
+
+      function renderNewLessonForm(courseId){
+        const course = findCourseById(courseId);
+        if (!course) return renderNotFound();
+        const el = document.createElement('div');
+        el.innerHTML = `
+          <div class="max-w-3xl mx-auto bg-gray-800/40 p-6 rounded">
+            <h2 class="text-2xl font-bold mb-4">New Lesson for ${course.title}</h2>
+            <form id="lessonForm" class="space-y-4">
+              <input name="title" placeholder="Lesson title" class="w-full bg-gray-900/40 rounded px-3 py-2" />
+              <input name="duration" placeholder="Duration (e.g. 10:30)" class="w-full bg-gray-900/40 rounded px-3 py-2" />
+              <textarea name="content" placeholder="Lesson content or description" class="w-full bg-gray-900/40 rounded px-3 py-2 h-32"></textarea>
+              <div class="flex items-center gap-3">
+                <button class="bg-rose-600 px-4 py-2 rounded">Create lesson</button>
+                <a href="#/course/${course.id}" data-link class="text-sm text-gray-400">Cancel</a>
+              </div>
+            </form>
+          </div>
+        `;
+        const view = document.getElementById('view'); view.innerHTML = ''; view.appendChild(el);
+
+        document.getElementById('lessonForm').addEventListener('submit',(e)=>{
+          e.preventDefault();
+          const f = e.target;
+          const newLesson = { id: 'l'+Math.random().toString(36).slice(2,8), title: f.title.value || 'Untitled', duration: f.duration.value||'0:00', content: f.content.value||'' };
+          course.lessons.push(newLesson);
+          location.hash = `#/course/${course.id}`;
+        });
+      }
+
+      function renderNotFound(){
+        const view = document.getElementById('view'); view.innerHTML = `<div class="text-center py-20"><h2 class="text-2xl font-bold">Page not found</h2><p class="text-gray-400 mt-2">Try returning home</p></div>`;
+      }
+
+      // delegate clicks for internal links
+      document.addEventListener('click', (e)=>{
+        const a = e.target.closest('[data-link]');
+        if (a && a.getAttribute('href') && a.getAttribute('href').startsWith('#')){
+          e.preventDefault();
+          location.hash = a.getAttribute('href');
+        }
+      });
+
+      // wire hash change
+      window.addEventListener('hashchange', navigate);
+      window.addEventListener('load', ()=>{ document.getElementById('year').textContent = new Date().getFullYear(); navigate(); });
+    </script>
+  </body>
+</html>

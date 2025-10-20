@@ -8,15 +8,15 @@ import {
 import { useAuth } from "./contexts/AuthContext";
 import Register from "./pages/register";
 import Login from "./pages/Login";
-import Courses from "./pages/Courses";
 import Unauthorized from "./pages/Unauthorized";
 import StudentDashboard from "./pages/StudentDashboard";
 import TeacherDashboard from "./pages/TeacherDashboard";
 import PageNotFound from "./pages/PageNotFound";
 import NewCourse from "./pages/NewCourse";
-import CoursePage from "./pages/CoursePage";
+import CoursePage from "./layouts/CoursePage";
 import EditCourse from "./pages/EditCourse";
 import LessonPage from "./pages/LessonPage";
+import HomePage from "./layouts/Homepage";
 
 function ProtectedRoute({ children, allowedRoles }) {
   const { user } = useAuth();
@@ -30,7 +30,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Courses />} />
+        <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
@@ -63,6 +63,7 @@ function App() {
 
         <Route path="/courses/get/:courseId" element={<CoursePage />} />
         <Route path="/courses/edit/:courseId" element={<EditCourse />} />
+        {/* <Route path="/lessons/new/:courseId" element={<NewLesson />} /> */}
         <Route path="/lessons/get/:lessonId" element={<LessonPage />} />
 
         <Route path="/unauthorized" element={<Unauthorized />} />

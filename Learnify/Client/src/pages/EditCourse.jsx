@@ -12,7 +12,7 @@ export default function EditCourse() {
     courseTitle: "",
     courseDescription: "",
   });
-  const [editFields, setEditFields] = useState({
+  const [editLessonFields, setEditLessonFields] = useState({
     // new lesson details
     title: "",
     description: "",
@@ -35,13 +35,13 @@ export default function EditCourse() {
       "/api/lesson/new",
       {
         courseId,
-        title: editFields.title,
-        description: editFields.description,
+        title: newLessonFields.title,
+        description: newLessonFields.description,
       },
       { withCredentials: true }
     );
     console.log(res.data);
-    setEditFields({
+    setNewLessonFields({
       // -------------------------- Not working --------------------------
       title: "",
       description: "",
@@ -79,17 +79,17 @@ export default function EditCourse() {
       "/api/lesson/edit",
       {
         lessonId: lesson._id,
-        title: newLessonFields.title,
-        description: newLessonFields.description,
+        title: editLessonFields.title,
+        description: editLessonFields.description,
       },
       { withCredentials: true }
     );
-    setNewLessonFields({ // ------------ Not working --------------
+    setEditLessonFields({
       title: "",
       description: "",
     });
     setLesson({});
-    console.log(" --> ", newLessonFields);
+    console.log(" --> ", editLessonFields);
     console.log(res.data);
   };
 
@@ -135,20 +135,20 @@ export default function EditCourse() {
           name="title"
           type="text"
           placeholder="Lesson title..."
-          value={editFields.name}
+          value={newLessonFields.name}
           required
           onChange={(e) =>
-            setEditFields({ ...editFields, [e.target.name]: e.target.value })
+            setNewLessonFields({ ...newLessonFields, [e.target.name]: e.target.value })
           }
         />
         <input
           name="description"
           type="text"
           placeholder="Lesson description..."
-          value={editFields.name}
+          value={newLessonFields.name}
           required
           onChange={(e) =>
-            setEditFields({ ...editFields, [e.target.name]: e.target.value })
+            setNewLessonFields({ ...newLessonFields, [e.target.name]: e.target.value })
           }
         />
         <button onClick={addNewLesson}>Add Lesson</button>
@@ -164,11 +164,11 @@ export default function EditCourse() {
             name="title"
             type="text"
             placeholder="Lesson description..."
-            value={newLessonFields.name}
+            value={editLessonFields.name}
             required
             onChange={(e) =>
-              setNewLessonFields({
-                ...newLessonFields,
+              setEditLessonFields({
+                ...editLessonFields,
                 [e.target.name]: e.target.value,
               })
             }
@@ -177,11 +177,11 @@ export default function EditCourse() {
             name="description"
             type="text"
             placeholder="Lesson description..."
-            value={newLessonFields.name}
+            value={editLessonFields.name}
             required
             onChange={(e) =>
-              setNewLessonFields({
-                ...newLessonFields,
+              setEditLessonFields({
+                ...editLessonFields,
                 [e.target.name]: e.target.value,
               })
             }
