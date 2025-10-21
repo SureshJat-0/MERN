@@ -68,8 +68,7 @@ export default function Course() {
               <span className="font-medium">{course?.lessons?.length}</span>
             </div>
             <Link
-              // href="#/new-lesson/${course.id}"
-              to="/courses/new"
+              to={`/lessons/new/${course._id}`}
               data-link
               className="mt-4 inline-block text-center w-full bg-rose-600 hover:bg-rose-500 text-white py-2 rounded"
             >

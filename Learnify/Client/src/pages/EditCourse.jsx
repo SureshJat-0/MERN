@@ -29,25 +29,6 @@ export default function EditCourse() {
     getCourse(courseId);
   }, []);
 
-  const addNewLesson = async (e) => {
-    e.preventDefault();
-    const res = await axios.post(
-      "/api/lesson/new",
-      {
-        courseId,
-        title: newLessonFields.title,
-        description: newLessonFields.description,
-      },
-      { withCredentials: true }
-    );
-    console.log(res.data);
-    setNewLessonFields({
-      // -------------------------- Not working --------------------------
-      title: "",
-      description: "",
-    });
-  };
-
   const editCourseDetails = async (e) => {
     e.preventDefault();
     const res = await axios.put(
@@ -66,11 +47,6 @@ export default function EditCourse() {
     console.log(res.data);
   };
 
-  const [newLessonFields, setNewLessonFields] = useState({
-    title: "",
-    description: "",
-  });
-  const [lesson, setLesson] = useState({});
   const editLessonRef = useRef(null);
 
   const editLesson = async (e) => {
@@ -124,34 +100,6 @@ export default function EditCourse() {
           }
         />
         <button onClick={editCourseDetails}>Edit Course</button>
-      </div>
-
-      <br />
-      <br />
-
-      <h1>Add Lesson</h1>
-      <div className="">
-        <input
-          name="title"
-          type="text"
-          placeholder="Lesson title..."
-          value={newLessonFields.name}
-          required
-          onChange={(e) =>
-            setNewLessonFields({ ...newLessonFields, [e.target.name]: e.target.value })
-          }
-        />
-        <input
-          name="description"
-          type="text"
-          placeholder="Lesson description..."
-          value={newLessonFields.name}
-          required
-          onChange={(e) =>
-            setNewLessonFields({ ...newLessonFields, [e.target.name]: e.target.value })
-          }
-        />
-        <button onClick={addNewLesson}>Add Lesson</button>
       </div>
       <br />
       <br />

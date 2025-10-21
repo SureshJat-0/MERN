@@ -9,14 +9,16 @@ import { useAuth } from "./contexts/AuthContext";
 import Unauthorized from "./pages/Unauthorized";
 import StudentDashboard from "./pages/StudentDashboard";
 import PageNotFound from "./pages/PageNotFound";
-import NewCourse from "./pages/NewCourse";
 import CoursePage from "./layouts/CoursePage";
 import EditCourse from "./pages/EditCourse";
-import LessonPage from "./pages/LessonPage";
+import Lesson from "./pages/Lesson";
 import HomePage from "./layouts/Homepage";
 import LoginPage from "./layouts/LoginPage";
 import RegisterPage from "./layouts/RegisterPage";
 import TeacherDashboardPage from "./layouts/TeacherDashboard";
+import NewCoursePage from "./layouts/NewCoursePage";
+import NewLessonPage from "./layouts/NewLessonPage";
+import LessonPage from "./layouts/LessonPage";
 
 function ProtectedRoute({ children, allowedRoles }) {
   const { user } = useAuth();
@@ -56,14 +58,14 @@ function App() {
           path="/courses/new"
           element={
             <ProtectedRoute allowedRoles={["teacher"]}>
-              <NewCourse />
+              <NewCoursePage />
             </ProtectedRoute>
           }
         />
 
         <Route path="/courses/get/:courseId" element={<CoursePage />} />
         <Route path="/courses/edit/:courseId" element={<EditCourse />} />
-        {/* <Route path="/lessons/new/:courseId" element={<NewLesson />} /> */}
+        <Route path="/lessons/new/:courseId" element={<NewLessonPage />} />
         <Route path="/lessons/get/:lessonId" element={<LessonPage />} />
 
         <Route path="/unauthorized" element={<Unauthorized />} />

@@ -1,6 +1,14 @@
 import Course from "../models/course.js";
 import Lesson from "../models/lesson.js";
 
+const getLesson = async (req, res) => {
+  const { lessonId } = req.params;
+  if(!lessonId) return res.send({ message: "Invalid lessonId!"});
+  const lesson = await Lesson.findById(lessonId);
+  if(!lesson) return res.send({ message: "Lesson not found!"});
+  res.send(lesson);
+}
+
 const postNewLesson = async (req, res) => {
   const { courseId, title, description } = req.body;
   const course = await Course.findById(courseId);
@@ -24,4 +32,4 @@ const editLesson = async (req, res) => {
   res.send({ message: "Lesson updated!", lesson });
 };
 
-export { postNewLesson, editLesson };
+export { postNewLesson, editLesson, getLesson };

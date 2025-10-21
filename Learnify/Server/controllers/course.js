@@ -24,7 +24,7 @@ const uploadCourse = async (req, res) => {
   const { title, description } = req.body;
   if (!title && !description)
     return res
-      .statut(400)
+      .status(400)
       .send({ message: "Title and description is required!" });
   const course = await Course.create({ title, description });
   // Adding course to teacher DB
