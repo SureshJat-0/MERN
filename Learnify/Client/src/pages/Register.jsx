@@ -23,56 +23,50 @@ export default function Register() {
     });
   };
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex gap-8">
-        <Link to="/">Courses</Link>
-        <Link to="/login">Login</Link>
-        <Link to="/dashboard/teacher">Teacher Dashboard</Link>
-        <Link to="/dashboard/student">Student Dashboard</Link>
-        <Link to="/courses/new">New Course</Link>
-      </div>
-      <br />
-      <br />
-      <h1>Register User</h1>
-      <input
-        type="text"
-        placeholder="Name"
-        name="name"
-        value={inputFields.name}
-        onChange={(e) =>
-          setInputFields({ ...inputFields, [e.target.name]: e.target.value })
-        }
-      />
-      <input
-        type="text"
-        placeholder="Email"
-        name="email"
-        value={inputFields.email}
-        onChange={(e) =>
-          setInputFields({ ...inputFields, [e.target.name]: e.target.value })
-        }
-      />
-      <input
-        type="text"
-        placeholder="Password"
-        name="password"
-        value={inputFields.password}
-        onChange={(e) =>
-          setInputFields({ ...inputFields, [e.target.name]: e.target.value })
-        }
-      />
-      <input
-        type="text"
-        placeholder="Role"
-        name="role"
-        value={inputFields.role}
-        onChange={(e) =>
-          setInputFields({ ...inputFields, [e.target.name]: e.target.value })
-        }
-      />
-      <button onClick={registerUser} className="cursor-pointer">
-        Register
-      </button>
+    <div className="max-w-md mx-auto my-8 bg-gray-800/40 p-6 rounded-lg">
+      <h2 className="text-2xl font-bold mb-4">Create account</h2>
+      <form id="registerForm" className="space-y-4">
+        <input
+          value={inputFields.name}
+          onChange={(e) =>
+            setInputFields({ ...inputFields, [e.target.name]: e.target.value })
+          }
+          name="name"
+          placeholder="Full name"
+          className="w-full bg-gray-900/40 rounded px-3 py-2"
+        />
+        <input
+          value={inputFields.email}
+          onChange={(e) =>
+            setInputFields({ ...inputFields, [e.target.name]: e.target.value })
+          }
+          name="email"
+          placeholder="Email"
+          className="w-full bg-gray-900/40 rounded px-3 py-2"
+        />
+        <input
+          value={inputFields.password}
+          onChange={(e) =>
+            setInputFields({ ...inputFields, [e.target.name]: e.target.value })
+          }
+          name="password"
+          type="password"
+          placeholder="Password"
+          className="w-full bg-gray-900/40 rounded px-3 py-2"
+        />
+        <div className="flex items-center justify-between">
+          <button
+            onClick={registerUser}
+            type="submit"
+            className="bg-rose-600 px-4 py-2 rounded cursor-pointer"
+          >
+            Sign up
+          </button>
+          <Link to="/login" data-link className="text-sm text-gray-400">
+            Already have an account?
+          </Link>
+        </div>
+      </form>
     </div>
   );
 }
