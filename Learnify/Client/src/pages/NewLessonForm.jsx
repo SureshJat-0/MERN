@@ -2,7 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 
-export default function NewLesson() {
+export default function NewLessonForm() {
   const { courseId } = useParams();
   const [newLessonFields, setNewLessonFields] = useState({
     title: "",
@@ -21,7 +21,6 @@ export default function NewLesson() {
     );
     console.log(res.data);
     setNewLessonFields({
-      // -------------------------- Not working --------------------------
       title: "",
       description: "",
     });

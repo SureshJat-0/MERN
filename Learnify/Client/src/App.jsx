@@ -10,15 +10,13 @@ import Unauthorized from "./pages/Unauthorized";
 import StudentDashboard from "./pages/StudentDashboard";
 import PageNotFound from "./pages/PageNotFound";
 import CoursePage from "./layouts/CoursePage";
-import EditCourse from "./pages/EditCourse";
-import Lesson from "./pages/Lesson";
 import HomePage from "./layouts/Homepage";
 import LoginPage from "./layouts/LoginPage";
 import RegisterPage from "./layouts/RegisterPage";
 import TeacherDashboardPage from "./layouts/TeacherDashboard";
 import NewCoursePage from "./layouts/NewCoursePage";
-import NewLessonPage from "./layouts/NewLessonPage";
 import LessonPage from "./layouts/LessonPage";
+import CourseEditPage from "./layouts/CourseEditPage";
 
 function ProtectedRoute({ children, allowedRoles }) {
   const { user } = useAuth();
@@ -37,6 +35,19 @@ function App() {
         <Route path="/register" element={<RegisterPage />} />
 
         <Route
+          path="/dashboard/teacher/*"
+          element={
+            <ProtectedRoute allowedRoles={["teacher"]}>
+              <Routes>
+                <Route path="/" element={<TeacherDashboardPage />} />
+                <Route path="/course/new" element={<NewCoursePage />} />
+                <Route path="/course/edit/:courseId" element={<CourseEditPage />} />
+              </Routes>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
           path="/dashboard/student"
           element={
             <ProtectedRoute allowedRoles={["student"]}>
@@ -45,28 +56,8 @@ function App() {
           }
         />
 
-        <Route
-          path="/dashboard/teacher"
-          element={
-            <ProtectedRoute allowedRoles={["teacher"]}>
-              <TeacherDashboardPage />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/courses/new"
-          element={
-            <ProtectedRoute allowedRoles={["teacher"]}>
-              <NewCoursePage />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route path="/courses/get/:courseId" element={<CoursePage />} />
-        <Route path="/courses/edit/:courseId" element={<EditCourse />} />
-        <Route path="/lessons/new/:courseId" element={<NewLessonPage />} />
-        <Route path="/lessons/get/:lessonId" element={<LessonPage />} />
+        <Route path="/course/get/:courseId" element={<CoursePage />} />
+        <Route path="/lesson/get/:lessonId" element={<LessonPage />} />
 
         <Route path="/unauthorized" element={<Unauthorized />} />
         <Route path="*" element={<PageNotFound />} />

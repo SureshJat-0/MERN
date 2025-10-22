@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { useEffect } from "react";
+import TeacherDashboardAside from "./TeacherDashboardAside";
 
 export default function TeacherDashboard() {
   const [teacherCourses, setTeacherCourses] = useState([]);
@@ -10,7 +11,7 @@ export default function TeacherDashboard() {
 
   const getTeacherCourses = async () => {
     if (user.role !== "teacher") return console.log("Teacher only feature!");
-    const res = await axios.get(`/api/courses/teacher/${user.id}`, {
+    const res = await axios.get(`/api/course/teacher/${user.id}`, {
       withCredentials: true,
     });
     setTeacherCourses(res.data);
@@ -29,46 +30,12 @@ export default function TeacherDashboard() {
             >
               Edit
             </Link> */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 my-8 px-20">
-        <aside className="lg:col-span-1 bg-gray-800/40 p-4 rounded-md">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded bg-rose-600/40 flex items-center justify-center">
-              T
-            </div>
-            <div>
-              <div className="font-semibold">{"Teacher"}</div>
-              <div className="text-sm text-gray-400">Teacher</div>
-            </div>
-          </div>
-          <nav className="mt-6 space-y-2 text-sm">
-            <Link
-              to="/dashboard/teacher"
-              data-link
-              className="block px-2 py-1 rounded hover:bg-gray-700/30"
-            >
-              My courses
-            </Link>
-            <Link
-              to="/courses/new"
-              data-link
-              className="block px-2 py-1 rounded hover:bg-gray-700/30"
-            >
-              Create course
-            </Link>
-            <Link
-              to="/"
-              data-link
-              className="block px-2 py-1 rounded hover:bg-gray-700/30"
-            >
-              Settings
-            </Link>
-          </nav>
-        </aside>
-
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 px-8 sm:px-12 lg:px-20 py-8">
+        <TeacherDashboardAside />
         <div className="lg:col-span-3">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-2xl font-bold">Instructor Studio</h2>
-            <Link to="/courses/new" data-link className="text-rose-400">
+            <Link to="/dashboard/teacher/course/new" data-link className="text-rose-400">
               New course
             </Link>
           </div>
@@ -83,14 +50,14 @@ export default function TeacherDashboard() {
                   </div>
                   <div className="flex gap-4">
                   <Link
-                    to={`/courses/get/${course._id}`}
+                    to={`/course/get/${course._id}`}
                     data-link
                     className="text-rose-400 text-sm"
                   >
                     Open
                   </Link>
                   <Link
-                    to={`/courses/edit/${course._id}`}
+                    to={`/dashboard/teacher/course/edit/${course._id}`}
                     data-link
                     className="text-rose-400 text-sm"
                   >

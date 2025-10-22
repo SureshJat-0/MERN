@@ -20,7 +20,7 @@ export default function Lesson() {
 
   return (
     <>
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 my-8 mx-20">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 px-8 sm:px-12 lg:px-20 py-8">
         <div className="lg:col-span-2">
           <div className="aspect-video bg-black rounded-md overflow-hidden flex items-center justify-center">
             <div className="text-gray-400">Video Player Placeholder</div>
@@ -40,13 +40,13 @@ export default function Lesson() {
           <div className="bg-gray-800/50 p-4 rounded-md">
             <div className="text-sm text-gray-400">Course</div>
             {/* <a href="#/course/${lesson.courseId}" data-link className="block mt-2 text-rose-400">{lesson.courseTitle}</a> */}
-            <a
-              href="#/course/${lesson.courseId}"
-              data-link
+            <p
+              // href="#/course/${lesson.courseId}"
+              // data-link
               className="block mt-2 text-rose-400"
             >
               {lesson.title}
-            </a>
+            </p>
             <div className="mt-4 text-sm text-gray-400">Other lessons</div>
             {/* <div className="mt-2 space-y-2">
                   ${findCourseById(lesson.courseId).lessons.map(l=>`<a href="#/lesson/${l.id}" data-link className="block text-sm hover:underline">${l.title}</a>`).join('')}

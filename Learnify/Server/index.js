@@ -27,7 +27,7 @@ mongoose
   .then(() => console.log("Mongodb Connnected!"));
 
 app.use("/api/auth", AuthRouter);
-app.use("/api/courses", CourseRouter);
+app.use("/api/course", CourseRouter);
 app.use("/api/lesson", LessonRouter);
 
 app.listen(PORT, () => {

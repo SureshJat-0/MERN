@@ -8,7 +8,7 @@ export default function NewCourse() {
   });
 
   const addCourse = async () => {
-    const res = await axios.post("/api/courses/new", courseFields, {
+    const res = await axios.post("/api/course/new", courseFields, {
       withCredentials: true,
     });
     console.log(res.data);
@@ -20,9 +20,10 @@ export default function NewCourse() {
 
   return (
     <>
-      <div className="max-w-2xl mx-auto my-8 bg-gray-800/40 p-6 rounded-lg">
+      <div className="lg:col-span-3 ">
         <h2 className="text-2xl font-bold mb-4">New Course</h2>
-        <form id="newCourseForm" className="space-y-4">
+        <form id="newCourseForm" className="space-y-4 max-w-2xl bg-gray-800/40 p-6 rounded-lg">
+        <h3 className="font-semibold">Create new course</h3>
           <input
             name="title"
             placeholder="Title"

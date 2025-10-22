@@ -19,7 +19,7 @@ export default function EditCourse() {
   });
 
   const getCourse = async (courseId) => {
-    const res = await axios.get(`/api/courses/get/${courseId}`, {
+    const res = await axios.get(`/api/course/get/${courseId}`, {
       withCredentials: true,
     });
     setCourse(res.data);
@@ -32,7 +32,7 @@ export default function EditCourse() {
   const editCourseDetails = async (e) => {
     e.preventDefault();
     const res = await axios.put(
-      "/api/courses/edit",
+      "/api/course/edit",
       {
         courseId,
         title: editCourseFields.courseTitle,
@@ -144,7 +144,7 @@ export default function EditCourse() {
         <br />
         <ul className="flex flex-col gap-2 cursor-pointer">
           {course?.lessons?.map((lesson, ind) => (
-            <Link to={`/lessons/get/${lesson._id}`} className="flex" key={ind}>
+            <Link to={`/lesson/get/${lesson._id}`} className="flex" key={ind}>
               <li key={ind} className="grow border rounded p-2 mx-4">
                 {lesson.title}
               </li>
