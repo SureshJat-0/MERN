@@ -6,17 +6,17 @@ import {
   Navigate,
 } from "react-router-dom";
 import { useAuth } from "./contexts/AuthContext";
-import Unauthorized from "./pages/Unauthorized";
-import StudentDashboard from "./pages/StudentDashboard";
-import PageNotFound from "./pages/PageNotFound";
+import Unauthorized from "./components/Unauthorized";
+import PageNotFound from "./components/PageNotFound";
 import CoursePage from "./layouts/CoursePage";
 import HomePage from "./layouts/Homepage";
 import LoginPage from "./layouts/LoginPage";
 import RegisterPage from "./layouts/RegisterPage";
-import TeacherDashboardPage from "./layouts/TeacherDashboard";
+import TeacherDashboardPage from "./layouts/TeacherDashboardPage";
 import NewCoursePage from "./layouts/NewCoursePage";
 import LessonPage from "./layouts/LessonPage";
 import CourseEditPage from "./layouts/CourseEditPage";
+import StudentDashboardPage from "./layouts/StudentDashboardPage";
 
 function ProtectedRoute({ children, allowedRoles }) {
   const { user } = useAuth();
@@ -27,6 +27,7 @@ function ProtectedRoute({ children, allowedRoles }) {
 }
 
 function App() {
+  const { user } = useAuth();
   return (
     <Router>
       <Routes>
@@ -40,8 +41,14 @@ function App() {
             <ProtectedRoute allowedRoles={["teacher"]}>
               <Routes>
                 <Route path="/" element={<TeacherDashboardPage />} />
-                <Route path="/course/new" element={<NewCoursePage />} />
-                <Route path="/course/edit/:courseId" element={<CourseEditPage />} />
+                <Route
+                  path="/course/new"
+                  element={<NewCoursePage user={user} />}
+                />
+                <Route
+                  path="/course/edit/:courseId"
+                  element={<CourseEditPage />}
+                />
               </Routes>
             </ProtectedRoute>
           }
@@ -51,7 +58,7 @@ function App() {
           path="/dashboard/student"
           element={
             <ProtectedRoute allowedRoles={["student"]}>
-              <StudentDashboard />
+              <StudentDashboardPage />
             </ProtectedRoute>
           }
         />

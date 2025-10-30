@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
-import CourseBox from "../components/CourseBox";
+import CourseBox from "./CourseBox";
 
 export default function Courses() {
   const [courses, setCourses] = useState([]);
@@ -15,15 +15,6 @@ export default function Courses() {
   useEffect(() => {
     getAllCourses();
   }, []);
-
-  const joinCourse = async (e, course) => {
-    e.preventDefault();
-    const res = await axios.post("/api/course/student/new", {
-      courseId: course._id,
-      studentId: user.id,
-    });
-    console.log(res.data);
-  };
 
   return (
     <div className="mx-auto sm:px-12 lg:px-20 px-8 py-8">

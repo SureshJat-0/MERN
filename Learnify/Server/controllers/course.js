@@ -54,12 +54,26 @@ const getTeacherCourses = async (req, res) => {
 
 const addStudentInCourse = async (req, res) => {
   const { courseId, studentId } = req.body;
-  if(!courseId) return res.send({ message: "Course id required!"});
+  if (!courseId) return res.send({ message: "Course id required!" });
+  if (!studentId) return res.send({ message: "Student id required!" });
+  // adding student id in course
   const course = await Course.findById(courseId);
   course.students.push(studentId);
   await course.save();
-  res.send({ student: studentId, message: "New student added!"});
-}
+  // adding course id in student
+  const student = await User.findById(studentId);
+  student.courses.push(courseId);
+  await student.save();
+  res.send({ student: studentId, message: "New student added!" });
+};
+
+const getStudentCourses = async (req, res) => {
+  const studentId = req.params.studentId;
+  const student = await User.findById(studentId).populate("courses");
+  if (!student) return res.send({ message: "Invalid studentId" });
+  const courses = student.courses;
+  res.send(courses);
+};
 
 export {
   uploadCourse,
@@ -68,4 +82,5 @@ export {
   getCourse,
   editcourse,
   addStudentInCourse,
+  getStudentCourses,
 };

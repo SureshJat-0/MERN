@@ -1,12 +1,17 @@
 import { Link } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 
 export default function Navbar() {
+  const { user } = useAuth();
   return (
     <header className="bg-gray-800/70 backdrop-blur sticky top-0 z-40 border-b border-gray-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center gap-4">
-            <button id="menuBtn" className="p-2 rounded-md hover:bg-gray-700/40">
+            <button
+              id="menuBtn"
+              className="p-2 rounded-md hover:bg-gray-700/40"
+            >
               <svg
                 className="w-6 h-6"
                 fill="none"
@@ -59,27 +64,23 @@ export default function Navbar() {
 
           <div className="flex items-center gap-3">
             <nav className="hidden md:flex items-center gap-2">
-              {/* <a
-                href="/dashboard/teacher"
-                data-link
-                className="px-3 py-2 rounded hover:bg-gray-700/30"
-              >
-                Teacher Dashboard
-              </a>
-              <a
-                href="/dashboard/teacher"
-                data-link
-                className="px-3 py-2 rounded hover:bg-gray-700/30"
-              >
-                Student Dashboard
-              </a> */}
-              <Link
-                to="/dashboard/teacher"
-                data-link
-                className="px-3 py-2 rounded hover:bg-gray-700/30"
-              >
-                Dashboard
-              </Link>
+              {(user.role === "teacher" && (
+                <Link
+                  to="/dashboard/teacher"
+                  data-link
+                  className="px-3 py-2 rounded hover:bg-gray-700/30"
+                >
+                  Dashboard
+                </Link>
+              )) || (
+                <Link
+                  to="/dashboard/student"
+                  data-link
+                  className="px-3 py-2 rounded hover:bg-gray-700/30"
+                >
+                  Dashboard
+                </Link>
+              )}
             </nav>
             <div className="flex items-center gap-3">
               <Link

@@ -1,9 +1,11 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 
 export default function CourseHeader() {
   const { courseId } = useParams();
+  const { user } = useAuth();
   const [course, setCourse] = useState({});
 
   const getCourse = async (courseId) => {
@@ -16,7 +18,16 @@ export default function CourseHeader() {
   useEffect(() => {
     getCourse(courseId);
   }, []);
-  
+
+  const joinCourse = async (e, courseId) => {
+    e.preventDefault();
+    const res = await axios.post("/api/course/student/new", {
+      courseId,
+      studentId: user.id,
+    });
+    console.log(res.data);
+  };
+
   return (
     <div className="bg-gray-800/50 rounded-lg overflow-hidden">
       <img
@@ -26,9 +37,15 @@ export default function CourseHeader() {
       <div className="p-6">
         <h2 className="text-2xl font-bold">{course?.title}</h2>
         <div className="text-sm text-gray-400 mt-1">
-          By {course?.author || "Jone Doe"}
+          By {course?.name || "Jone Doe"}
         </div>
         <p className="mt-4 text-gray-300">{course?.description}</p>
+        <button
+          onClick={(e) => joinCourse(e, courseId)}
+          className="text-rose-500 hover:underline cursor-pointer mt-2"
+        >
+          Join Course +
+        </button>
       </div>
     </div>
   );

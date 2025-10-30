@@ -1,6 +1,6 @@
 import Navbar from "../components/Navbar";
-import CourseHeader from "../pages/CourseHeader";
-import CourseLessons from "../pages/CourseLessons";
+import CourseHeader from "../components/CourseHeader";
+import CourseLessons from "../components/CourseLessons";
 
 export default function CoursePage() {
   return (

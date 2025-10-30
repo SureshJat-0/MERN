@@ -28,13 +28,13 @@ const UserSchema = mongoose.Schema({
       }
     ],
     // Only teacher can have courses
-    validate: {
-      validator: function (value) {
-        if (this.role === "teacher") return true;
-        return !value || value.length === 0;
-      },
-    },
-    message: "Student can not have courses.",
+    // validate: {
+    //   validator: function (value) {
+    //     if (this.role === "teacher") return true;
+    //     return !value || value.length === 0;
+    //   },
+    // },
+    // message: "Student can not have courses.",
   },
 });
 

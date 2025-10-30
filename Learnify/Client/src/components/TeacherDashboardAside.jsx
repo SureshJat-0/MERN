@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-export default function TeacherDashboardAside() {
+export default function TeacherDashboardAside({ user }) {
   return (
     <>
       <aside className="lg:col-span-1 bg-gray-800/40 p-4 rounded-md">
@@ -9,7 +9,7 @@ export default function TeacherDashboardAside() {
             T
           </div>
           <div>
-            <div className="font-semibold">{"Teacher"}</div>
+            <div className="font-semibold">{user.name}</div>
             <div className="text-sm text-gray-400">Teacher</div>
           </div>
         </div>

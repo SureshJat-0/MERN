@@ -1,5 +1,5 @@
 import Navbar from "../components/Navbar"
-import Lesson from "../pages/Lesson";
+import Lesson from "../components/Lesson";
 
 export default function LessonPage() {
   return (

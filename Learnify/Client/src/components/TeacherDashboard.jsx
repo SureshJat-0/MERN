@@ -23,15 +23,8 @@ export default function TeacherDashboard() {
 
   return (
     <>
-      {/* <Link
-              to={`/courses/edit/${course._id}`}
-              key={ind + 1000}
-              className="border rounded p-2"
-            >
-              Edit
-            </Link> */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 px-8 sm:px-12 lg:px-20 py-8">
-        <TeacherDashboardAside />
+        <TeacherDashboardAside user={user}/>
         <div className="lg:col-span-3">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-2xl font-bold">Instructor Studio</h2>
@@ -42,6 +35,7 @@ export default function TeacherDashboard() {
           <div className="bg-gray-800/40 p-4 rounded mb-4">
             <h3 className="font-semibold">Your courses</h3>
             <div className="mt-3 grid sm:grid-cols-2 gap-3">
+              {teacherCourses.length === 0 && <p>No course yet</p>}
               {teacherCourses.map((course, ind) => (
                 <div className="p-3 bg-gray-900/30 rounded" key={ind}>
                   <div className="font-medium">{course.title}</div>

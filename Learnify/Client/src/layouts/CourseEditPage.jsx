@@ -1,10 +1,10 @@
 import Navbar from "../components/Navbar";
-import CourseAside from "../pages/CourseAside";
-import CourseHeader from "../pages/CourseHeader";
-import CourseLessons from "../pages/CourseLessons";
-import EditCourseForm from "../pages/EditCourseForm";
-import EditLessonForm from "../pages/EditLessonForm";
-import NewLessonForm from "../pages/NewLessonForm";
+import CourseAside from "../components/CourseAside";
+import CourseHeader from "../components/CourseHeader";
+import CourseLessons from "../components/CourseLessons";
+import EditCourseForm from "../components/EditCourseForm";
+import EditLessonForm from "../components/EditLessonForm";
+import NewLessonForm from "../components/NewLessonForm";
 
 export default function CourseEditPage() {
   return (
